@@ -1,4 +1,4 @@
-let fullTable;
+
 let chart;
 
 // ✅ Initialize Family Tree
