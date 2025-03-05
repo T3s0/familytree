@@ -189,3 +189,23 @@ function showNode(nodeEl, useScrollIntoView) {
 
     if (useScrollIntoView) nodeEl.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
 }
+
+function drawChart() {
+    console.log("✅ drawChart() is running...");
+
+    let chartContainer = document.getElementById("chart_container");
+    if (!chartContainer) {
+        console.error("❌ Error: chart_container does not exist!");
+        return;
+    }
+
+    try {
+        google.charts.load("current", { packages: ["orgchart"] });
+        google.charts.setOnLoadCallback(() => {
+            console.log("✅ Google Charts Loaded. Attempting to draw...");
+            initializeFamilyTree();
+        });
+    } catch (error) {
+        console.error("❌ Error drawing chart:", error);
+    }
+}
