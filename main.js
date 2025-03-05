@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             redirectiFrames(baseTimelineUrl + redirectedTimeline, redirectedTimeline);
         }
         else {
-            redirectiFrames(baseTimelineUrl + rootTimeline, rootTimeline);
+            redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
     }, 250);
 }, false);
