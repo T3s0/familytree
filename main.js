@@ -103,9 +103,20 @@ if (window.postMessage) {
     }
 }
 
-function redirectiFrames(timeframeUrl, orgChartElId) {
-     redirectTimelineiFrame(timeframeUrl);
-     navigateToNode(orgChartElId, false);
+function redirectTimelineiFrame(newUrl) {
+    console.log("Redirecting timeline iframe to: " + newUrl);
+
+    let iframe = document.getElementById('tl-timeline-iframe');
+
+    // Force iframe to reset before setting the new URL
+    iframe.src = "about:blank";  // This clears the iframe content first
+
+    setTimeout(() => {
+        iframe.src = newUrl;
+        console.log("New iframe source set: " + iframe.src);
+    }, 300); // Small delay ensures correct update
+}
+
 
 
 function redirectTimelineiFrame(newUrl) {
