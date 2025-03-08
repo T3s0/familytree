@@ -1,191 +1,282 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <title>Trabin Family History</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Load Google Fonts -->
-  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-  <script>
-    WebFont.load({ google: { families: ["Montserrat:400,700"] } });
-  </script>
+let fullTable;
+async function fetchDataAndInitializeChart() {
+    try {
+        const response = await fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv');
+        if (!response.ok) throw new Error('Failed to load data');
 
-  <!-- Load External CSS -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/index.css">
-</head>
-<body>
-
-  <!-- Tree Popup -->
-  <div id="tree-popup" class="resizable" style="display: none;">
-    <div id="tree-popup-header">
-      <button class="close-popup-btn" onclick="toggleOrgChartPopup()">X</button>
-      <button onclick="handleViewChoiceClick('view-tree', true);">View Tree</button>
-    </div>
-    <div id="popup-content-target"></div>
-    <div id="resizer" class="resizer"></div>
-  </div>
-
-  <!-- Timeline Container -->
-  <div id="timeline_container">
-    <iframe frameborder="0" scrolling="no" style="border-width:0; width: 100%; height: 99%;" id="tl-timeline-iframe"></iframe>
-  </div>
-
-  <!-- Tree Container -->
-  <div id="tree_container">
-    <div id="orgchart-container">
-      <div class="panzoom" id="panzoom_container">
-        <div id="chart_container" style="height: 100%;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Image Fix -->
-  <img src="https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/tree_view.png" alt="Tree View">
-
-  <!-- Load JavaScript Files -->
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/T3s0/familytree@latest/treechart.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/T3s0/familytree@latest/main.js?nocache=<?= time() ?>"></script>
-  <script src="https://cdn.jsdelivr.net/gh/T3s0/familytree@latest/treepopup.js"></script>
-
-  <!-- Load CSV and Render Tree -->
-  <script>
-    let chart;
-
-    // ✅ Ensure Google Charts Loads Before Drawing
-    google.charts.load("current", { packages: ["orgchart"] });
-    google.charts.setOnLoadCallback(() => {
-        console.log("✅ Google Charts Loaded. Now initializing family tree...");
-
-        if (typeof initializeFamilyTree === "function") {
-            fetch("https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv")
-              .then(response => response.text())
-              .then(data => {
-                  console.log("✅ CSV Loaded:", data.split("\n").slice(0, 5));
-                  initializeFamilyTree(data);
-              })
-              .catch(error => console.error("❌ Error loading CSV:", error));
-        } else {
-            console.error("❌ initializeFamilyTree() is still undefined!");
-        }
-    });
-
-    // ✅ Function to Initialize Family Tree
-    function initializeFamilyTree(csvData) {
-        console.log("✅ Family tree data received:", csvData.split("\n").slice(0, 5));
-
-        let processedData = processData(csvData);
-        if (!processedData || processedData.length === 0) {
-            console.error("❌ Error: No valid data found in CSV.");
-            return;
-        }
-
-        console.log("✅ Processed Family Tree Data:", processedData);
-
-        let chartContainer = document.getElementById("chart_container");
-        if (!chartContainer) {
-            console.error("❌ Error: chart_container does not exist!");
-            return;
-        }
-
-        if (typeof google.visualization === "undefined") {
-            console.error("❌ Google Charts library is not loaded!");
-            return;
-        }
-
-        let dataTable = new google.visualization.DataTable();
-        dataTable.addColumn("string", "Key_Name");
-        dataTable.addColumn("string", "Parent");
-        dataTable.addColumn("string", "Tooltip");
-
-        try {
-            dataTable.addRows(removeRemainingColumns(processedData, 1));
-        } catch (error) {
-            console.error("❌ Error processing tree data:", error);
-            return;
-        }
-
-        chart = new google.visualization.OrgChart(chartContainer);
-        chart.draw(dataTable, { allowHtml: true });
-
-        console.log("✅ Family Tree Successfully Rendered!");
+        const csvData = await response.text(); // Read CSV file as text
+        const newTable = new google.visualization.DataTable();
+        prepChartTable(csvData, newTable); // Pass fetched data to the existing function
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        document.getElementById("err_msg").innerText = "Error loading data.";
     }
+}
 
-    // ✅ Process CSV Data
-    function processData(csvData) {
-        let rows = csvData.split(/\r?\n/);
-        let data = [];
+// Call this function instead of manually passing `data`
+fetchDataAndInitializeChart();
 
-        for (let i = 0; i < rows.length; i++) {
-            let rawRow = rows[i].trim();
-            if (!rawRow || rawRow.startsWith("#")) continue;
+function prepChartTable(data, newTable) {
+    // prepere column properties 
+    var renderedTable = new google.visualization.DataTable();
+    //const fullTable = new google.visualization.DataTable();
+    fullTable = newTable;
 
-            let rowArray = processDataRow(rawRow, i, data.length);
+    renderedTable.addColumn('string', 'Key_Name');   // contains both the key and what's displayed in the box
+    renderedTable.addColumn('string', 'Parent');    // links to the parent key (empty if root)
+    // html for tool tip is not working, plain text populated in this (alwasy last) column
+    renderedTable.addColumn('string', 'tooltip', { html: true });
+
+    // create second table with same initial rows but not used for tooltip which is very finneky
+    fullTable.addColumn('string', 'Key_Name');
+    fullTable.addColumn('string', 'Parent');
+    fullTable.addColumn('string', 'tooltip');
+    fullTable.addColumn('string', 'TimelineUrl');   // timeline, with possible story hash 
+
+    // compose source data into appropriate table values
+    const sourceData = processData(data);
+    try {
+        renderedTable.addRows(removeRemainingColumns(sourceData, 1));
+    } catch (error) {
+        document.getElementById("err_msg").innerHTML = "Error loading tree data (row number does't count comment rows) " + error;
+        console.log(error);
+    }
+    fullTable.addRows(sourceData);
+
+    localStorage.setItem('chartFullTable', sourceData);
+    // Create the chart.
+    chart = new google.visualization.OrgChart(document.getElementById('chart_container'));  // popup test //
+
+    return renderedTable;
+}
+
+function treeSelectHandler() {
+    localStorage.setItem('selectedOrgItem', null);
+    var selectedItem = chart.getSelection()[0];
+    if (selectedItem && selectedItem.hasOwnProperty('row')) { //&& selectedItem.row) {
+        if (selectedItem) {
+            var val0 = fullTable.getValue(selectedItem.row, 0);
+            var val1 = fullTable.getValue(selectedItem.row, 1);
+            var val2 = fullTable.getValue(selectedItem.row, 2);
+            var val3 = fullTable.getValue(selectedItem.row, 3);
+            localStorage.setItem('selectedOrgItem', JSON.stringify({ 'row': selectedItem.row, 'url': val3 }));
+            console.log('The user selected row ' + selectedItem.row + ' with values ' + val0 + ', ' + val1 + ', ' + val2 + ', ' + val3);
+        }
+    }
+}
+
+
+function processData(csvData, isForToolTip) {
+    let rows = csvData.split(/\r?\n/);
+    let data = [];
+    let j = 0;
+    // any row starting with # is informational only - not processed
+    for (let i = 0; i < rows.length; i++) {
+        rawRow = rows[i];
+        if (rawRow.length > 1 && !rawRow.startsWith("#")) {
+            let rowArray = processDataRow(rows[i], i, j++);
             if (rowArray.length > 2) {
                 data.push(rowArray);
             }
         }
-
-        console.log("✅ Processed Data Array:", data);
-        return data;
     }
+    return data;
+}
+const timelineEmbedBaseUrl = 'https://www.tiki-toki.com/timeline/embed/';
+const timelineLinkBtnHtml = '" class="tl-span-id"></span><a class="tl-link-btn" onclick="timelineLink(this)"></a><br/>';
+const bodyInsertHtml = "-node'>";
 
-    // ✅ Process Individual CSV Row
-    function processDataRow(csvDataRow, i, dataRowNbr) {
-        let cells = csvDataRow.split(',');
-        let dataRow = [];
-
-        try {
-            var body = cells[2];
-
-            if (cells.length > 3 && cells[4]) {
-                var insertPoint = body.indexOf("-node'>") + 7;
-                if (insertPoint > 7) {
-                    body = body.slice(0, insertPoint) + '<span data-row="' + dataRowNbr + '" id="' + cells[4] + '" class="tl-span-id"></span><a class="tl-link-btn" onclick="timelineLink(this)"></a><br/>' + body.slice(insertPoint);
-                }
-            }
-            dataRow.push({ "v": cells[0], "f": body });  
-            dataRow.push(cells[1]);  
-
-            if (cells.length > 2) {
-                dataRow.push(cells[3] ? cells[3] : removeTags(cells[2]));
-            }
-            dataRow.push(cells[4] ? 'https://www.tiki-toki.com/timeline/embed/' + cells[4] : '');
-
-        } catch (error) {
-            console.error("❌ Error processing CSV row:", i, error);
+function processDataRow(csvDataRow, i, dataRowNbr) {
+    let cells = csvDataRow.split(',');
+    let dataRow = [];
+    try {
+        var body = cells[2];
+        var insertPoint = body.indexOf(bodyInsertHtml) + 7;
+        // insert link button if url is specified
+        if (cells.length > 3 && cells[4] && insertPoint > 7) {
+            body = body.slice(0, insertPoint) + '<span data-row="' + dataRowNbr + '" id="' + cells[4] + timelineLinkBtnHtml + body.slice(insertPoint);
         }
-        return dataRow;
-    }
+        else {
+            insertPoint = body.indexOf("<div >") + 5;
+            body = body.slice(0, insertPoint) + ' data-row="' + dataRowNbr + '" id="' + cells[0] + '"' + body.slice(insertPoint);
+        }
+        //console.log("tree load dataRowNbr " + dataRowNbr + " body: " + body)
+        dataRow.push({ "v": cells[0], "f": body });         // Key_Name, Body
+        dataRow.push(cells[1]);                             // Parent
 
-    // ✅ Toggle Tree Popup
-    function toggleOrgChartPopup() {
-        let popup = document.getElementById("tree-popup");
-        if (!popup) {
-            console.error("❌ Popup element does not exist!");
-            return;
+        if (cells.length > 2) {
+            if (cells[3]) {
+                dataRow.push(cells[3]);                             // provided Tooltip
+            }
+            else {
+                dataRow.push(removeTags(cells[2]));                             // use body as Tooltip (without html)
+            }
+        }
+        if (cells[4]) {
+            dataRow.push(timelineEmbedBaseUrl + cells[4]);
+        }
+        else {
+            dataRow.push('');
         }
 
-        let isVisible = popup.style.display === "block";
-        popup.style.display = isVisible ? "none" : "block";
-        console.log("✅ Popup visibility set to:", popup.style.display);
+
+    } catch (error) {
+        alert("tree load error in source file row " + i)
+        console.log("tree load error in source file row " + i)
+        console.error(error);
     }
+    return dataRow;
+}
 
-    // ✅ Utility: Remove HTML Tags
-    function removeTags(str) {
-        if (!str) return false;
-        return str.replace(/(<([^>]+)>)/ig, '');
+function removeTags(str) {
+    if ((str === null) || (str === ''))
+        return false;
+    else
+        str = str.toString();
+
+    // Regular expression to identify HTML tags in the input string. Replacing the identified HTML tag with a null string.
+    return str.replace(/(<([^>]+)>)/ig, '');
+}
+
+function timelineLink(el) {
+    var storedSelection = JSON.parse(localStorage.getItem('selectedOrgItem'));
+    if (storedSelection) {
+        console.log("timelineLink clicked for row(cell) " + storedSelection.row + " with url " + storedSelection.url);
+        // Just fire the message through parent object (this is still used even though it was coded when this was in iFrame)
+        if (window.parent) {
+            window.parent.postMessage({ from: 'org-chart', node: storedSelection.row, url: storedSelection.url }, '*');
+        }
+        showNode(el, true);
+        handleViewChoiceClick("view-timeline", true)
     }
+};
 
-    // ✅ Remove Remaining Columns for OrgChart
-    function removeRemainingColumns(data, fromIndex) {
-        return data.map(function (row) {
-            return row.slice(0, -fromIndex);
-        });
+function removeRemainingColumns(data, fromIndex) {
+    return data.map(function (row) {
+        return row.slice(0, -fromIndex);
+    });
+}
+
+function selectChartItem(rowIndex) {
+    var selectionArray = new Array(1).fill({ row: rowIndex, column: null });
+    console.log("selectChartItem row(cell) " + JSON.stringify(selectionArray));
+    chart.setSelection(selectionArray);
+}
+
+function navigateToNode(elementId, useScrollIntoView) {
+    console.log('navigating to ' + elementId);
+    const element = document.getElementById(elementId);
+    if (element) {
+        selectChartItem(element.dataset.row);
     }
+}
 
-  </script>
+function moveOrgChart(targetContainer, isFullPage, scale) {
+    let ocSource = document.getElementById("orgchart-container");
+    var selectedItem = JSON.parse(localStorage.getItem('selectedOrgItem'));
+    console.log('moveOrgChart moving to target ' + targetContainer.id + ' to ' + (isFullPage ? 'full' : 'popup') + ' with selected item ' + JSON.stringify(selectedItem));
+    let fromCenteredEl = (!selectedItem || selectedItem.row < 1)
+        ? getCenterElement(ocSource).centerEl
+        : document.querySelector('[data-row="' + (selectedItem.row) + '"]');
+    try {
+        if (ocSource.innerHTML.length > 1000) {
+            targetContainer.appendChild(ocSource);
+        }
+        showNode(fromCenteredEl, isFullPage);
+    } catch (error) {
+        console.log(error);
+    }
+    // if (!isFullPage){
+    //     document.getElementById("panzoom_container").style.transform = "matrix(.5, 0, 0, .5, 0, 0)";
+    // }
 
-</body>
-</html>
+}
+
+function getCenterElement(container) {
+    // calculate the central point of the container
+    let chartContainerBounds = container.getBoundingClientRect();
+    let containerCenter = { x: (chartContainerBounds.left + (chartContainerBounds.width / 2)), y: (chartContainerBounds.top + (chartContainerBounds.height / 2)) };
+    //console.log(`getCenterElement: container ${container.id} bounds (top, right, bottom, and left) ${chartContainerBounds.top}px, ${chartContainerBounds.right}px, ${chartContainerBounds.bottom}px, ${chartContainerBounds.left}px center: ${JSON.stringify(containerCenter)}`);
+    let sortedDist = [];
+    let elements = document.querySelectorAll('[data-row]');
+    let visibleCount = 0;
+    elements.forEach((el) => {
+        let elBounds = el.getBoundingClientRect();
+        if (elBounds.right == 0) {
+            elBounds = el.parentElement.getBoundingClientRect();
+        }
+
+        let { top, left, bottom, right } = el.getBoundingClientRect();
+        let elCenter = { x: (left + ((right - left) / 2)), y: (top + ((bottom - top) / 2)) };
+        if (elCenter.x > chartContainerBounds.left && elCenter.y < chartContainerBounds.bottom && elCenter.x < chartContainerBounds.right && elCenter.y > chartContainerBounds.top) {
+            visibleCount++;
+            let dist = ((containerCenter.x - elCenter.x) * (containerCenter.x - elCenter.x)) + ((containerCenter.y - elCenter.y) * (containerCenter.y - elCenter.y));
+            sortedDist.push({ elId: el.id, row: el.getAttribute("data-row"), dist: Math.sqrt(dist) });
+            //console.log('getCenterElement visible row ' + el.dataset.row + ' ' + JSON.stringify(elBounds));
+        }
+        else {
+            //console.log('getCenterElement not vis row ' + el.dataset.row + ' ' + JSON.stringify(elBounds));
+        }
+    });
+    orderedList = sortedDist.sort((a, b) => a.dist - b.dist)
+    if (orderedList.length == 0) {
+        console.log('for container: ' + container.id + ' no visible elements found');
+        return { centerEl: null, visibleCount: 0 };
+    }
+    //console.log('for container: ' + container.id +  ' closest element: ' + orderedList[0].elId + ' row: ' + orderedList[0].row + " dist: " +  orderedList[0].dist + " visible " +  visibleCount  + "/" +  elements.length );
+    return { centerEl: document.getElementById(orderedList[0].elId), visibleCount };
+}
+
+const elementIsVisibleInViewport = (el, partiallyVisible = false) => {
+    const { top, left, bottom, right } = el.getBoundingClientRect();
+    const { innerHeight, innerWidth } = window;
+    return partiallyVisible
+        ? ((top > 0 && top < innerHeight) ||
+            (bottom > 0 && bottom < innerHeight)) &&
+        ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
+        : top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
+};
+
+
+function showNode(nodeEl, isFullPage) {
+    if (nodeEl) {
+        console.log(`showNode nodeEl id:  ${nodeEl.id}, isFullPage: ${isFullPage}`);
+        let elBounds = nodeEl.getBoundingClientRect();
+        if (elBounds.right == 0) {
+            elBounds = nodeEl.parentElement.getBoundingClientRect();
+        }
+        let chartContainerBounds = document.getElementById("chart_container").getBoundingClientRect();
+        let centerEl = getCenterElement(document.getElementById("orgchart-container")).centerEl
+        //console.log(`showNode: cont bounds (top, right, bottom, and left) ${chartContainerBounds.top}px, ${chartContainerBounds.right}px, ${chartContainerBounds.bottom}px, ${chartContainerBounds.left}px`);
+        //console.log(`showNode: item bounds (top, right, bottom, and left) ${elBounds.top}px, ${elBounds.right}px, ${elBounds.bottom}px, ${elBounds.left}px`);
+        let scale = 1;
+
+        let containerCenter = { x: (chartContainerBounds.left + (chartContainerBounds.width / 2)), y: (chartContainerBounds.top + (chartContainerBounds.height / 2)) };
+        let elCenter = { x: (elBounds.left + (elBounds.width / 2)), y: (elBounds.top + (elBounds.height / 2)) };
+        let xTranslation = -(elCenter.x - containerCenter.x);
+        let yTranslation = -(elCenter.y - containerCenter.y);
+
+        // restore scale
+        let popupStateItem = localStorage.getItem("treePopupState");
+        if (popupStateItem != '[object Object]' && (typeof popupStateItem === 'string' || popupStateItem instanceof String)) {
+            let pState = JSON.parse(popupStateItem);
+            if (isFullPage) {
+                scale = pState.fullScale;  // moving to full
+            }
+            else {
+                scale = pState.popupScale;  // moving to popup
+            }
+            if (scale == 0 || Math.abs(scale) > 1) {
+                scale = 1;
+            }
+        }
+
+        let matrix = 'matrix(' + scale + ', 0, 0, ' + scale + ', ' + xTranslation + ', ' + yTranslation + ')';
+        console.log("transform matrix: " + matrix);
+        document.getElementById("panzoom_container").style.transform = matrix;
+
+        // log the "after"
+        elBounds = nodeEl.getBoundingClientRect();
+        //console.log(`showNode (after): item bounds (top, right, bottom, and left) ${elBounds.top}px, ${elBounds.right}px, ${elBounds.bottom}px, ${elBounds.left}px`);
+    }
+}
