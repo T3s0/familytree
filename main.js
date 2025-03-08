@@ -117,13 +117,6 @@ function redirectTimelineiFrame(newUrl) {
     }, 300); // Small delay ensures correct update
 }
 
-
-
-function redirectTimelineiFrame(newUrl) {
-    // set timeline target
-    document.getElementById('tl-timeline-iframe').src = newUrl;
-}
-
 function handleViewChoiceClick(viewChoice, setChecked) {
     let tlFrame = document.getElementById("tl-timeline-iframe");
     let ocEle = document.getElementById("orgchart-container");
