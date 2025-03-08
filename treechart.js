@@ -1,17 +1,16 @@
 let fullTable;
-async function fetchDataAndInitializeChart() {
-    try {
-        const response = await fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv');
-        if (!response.ok) throw new Error('Failed to load data');
-
-        const csvData = await response.text(); // Read CSV file as text
-        const newTable = new google.visualization.DataTable();
-        prepChartTable(csvData, newTable); // Pass fetched data to the existing function
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        document.getElementById("err_msg").innerText = "Error loading data.";
-    }
-}
+fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv')
+    .then(response => response.text())
+    .then(data => {
+        const sourceData = processData(data);
+        renderedTable.addRows(removeRemainingColumns(sourceData, 1));
+        fullTable.addRows(sourceData);
+        localStorage.setItem('chartFullTable', sourceData);
+    })
+    .catch(error => {
+        document.getElementById("err_msg").innerHTML = "Error loading tree data: " + error;
+        console.error("Error loading tree data: ", error);
+    });
 
 // Call this function instead of manually passing `data`
 fetchDataAndInitializeChart();
