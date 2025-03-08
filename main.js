@@ -62,16 +62,17 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 async function drawChart() {
-    let fName = "/data/familytreedata.csv";
+    let fName = "https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv"; // Updated data source
+
     const response = await fetch(fName);
     const data = await response.text();
 
     if (response.status > 200) {
         document.getElementById("err_msg").innerHTML = data;
-        //alert ("failed to load tree data from " + fName);
+        return; // Stop execution if the file failed to load
     }
 
-    var renderedTable = prepChartTable(data, new google.visualization.DataTable())
+    var renderedTable = prepChartTable(data, new google.visualization.DataTable());
 
     // Create the chart.
     chart = new google.visualization.OrgChart(document.getElementById('chart_container'));
@@ -85,6 +86,7 @@ async function drawChart() {
 
     console.log('chart drawn');
 }
+
 
 if (window.postMessage) {
     var tlMouseupFunc = function () {
