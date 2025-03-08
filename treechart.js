@@ -2,14 +2,11 @@ let fullTable;
 fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv')
     .then(response => response.text())
     .then(data => {
-        const sourceData = processData(data);
-        renderedTable.addRows(removeRemainingColumns(sourceData, 1));
-        fullTable.addRows(sourceData);
-        localStorage.setItem('chartFullTable', sourceData);
+        prepChartTable(data, new google.visualization.DataTable()); // Pass the new data to the existing function
     })
     .catch(error => {
         document.getElementById("err_msg").innerHTML = "Error loading tree data: " + error;
-        console.error("Error loading tree data: ", error);
+        console.error("Error fetching tree data: ", error);
     });
 
 // Call this function instead of manually passing `data`
