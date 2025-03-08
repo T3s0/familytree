@@ -1,16 +1,15 @@
 let fullTable;
 fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv')
     .then(response => response.text())
-    .then(data => {
-        prepChartTable(data, new google.visualization.DataTable()); // Pass the new data to the existing function
+    .then(csvData => {
+        let fullTable = new google.visualization.DataTable(); // Ensure new table is created
+        prepChartTable(csvData, fullTable); // Pass fetched data to the existing function
     })
     .catch(error => {
+        console.error("Error fetching tree data:", error);
         document.getElementById("err_msg").innerHTML = "Error loading tree data: " + error;
-        console.error("Error fetching tree data: ", error);
     });
 
-// Call this function instead of manually passing `data`
-fetchDataAndInitializeChart();
 
 function prepChartTable(data, newTable) {
     // prepere column properties 
