@@ -1,4 +1,4 @@
-/* .imageContainer {
+.imageContainer {
   display:inline-block;
   position: relative;
   left: 50%;
@@ -7,7 +7,7 @@
   background-color: #808080;
   max-width: 100%;
   overflow: hidden;
-} */
+} 
 
 body {
   background-color: lightgrey;
