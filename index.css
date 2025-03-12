@@ -63,12 +63,14 @@ input {
 }
 
 .tl-link-btn {
-  height: 24px;
-  width: 24px; /* Ensure width is set */
+  width: 30px; /* Ensure width is set */
+  height: 30px; /* Ensure height is set */
   background: url(https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/open_story.png) no-repeat center;
-  background-size: contain; /* Ensures the image scales properly */
-  display: block;
+  background-size: contain; /* Ensures the image is visible inside the button */
+  display: inline-block; /* Ensure it is displayed properly */
+  border: 1px solid red; /* Debugging: Add a visible border */
 }
+
 
 
 #orgchart-container {
