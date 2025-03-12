@@ -64,7 +64,7 @@ input {
 
 .tl-link-btn {
   height: 24px;
-  background: url(<img src="https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/open_story.png" ) no-repeat center;
+  background: url(https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/open_story.png) no-repeat center;
   display: block;
   /* padding-bottom: 35px;
   margin-bottom: 30px; */
