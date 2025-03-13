@@ -121,7 +121,7 @@ input {
   top: 400px;
   min-width: 300px;
    width: 480px;
-  height: 550px; 
+  height: 400px; 
   box-sizing: border-box;
   z-index: 100;
   background-color: #f1f1f1;
@@ -146,11 +146,7 @@ input {
 .resizable {
   position: relative;
 }
-#panzoom_container {
-    width: 100%;
-    height: 100vh; /* Or any fixed height */
-    overflow: hidden;
-}
+
 
 /* triangle to move popup */
 .resizer {
