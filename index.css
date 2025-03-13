@@ -146,6 +146,11 @@ input {
 .resizable {
   position: relative;
 }
+#panzoom_container {
+    width: 100%;
+    height: 100vh; /* Or any fixed height */
+    overflow: hidden;
+}
 
 /* triangle to move popup */
 .resizer {
