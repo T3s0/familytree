@@ -70,6 +70,11 @@ input {
   display: inline-block; /* Ensure it is displayed properly */
   border: 1px solid red; /* Debugging: Add a visible border */
 }
+document.querySelectorAll('.tl-link-btn').forEach(el => {
+    if (!el.querySelector('img')) {
+        el.innerHTML = '<img src="https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/open_story.png" width="30" height="30">';
+    }
+});
 
 
 
