@@ -186,6 +186,15 @@ function moveOrgChart(targetContainer, isFullPage, scale) {
     // }
 
 }
+window.addEventListener('load', () => {
+    document.querySelectorAll('.tl-link-btn').forEach(el => {
+        el.style.width = "30px";
+        el.style.height = "30px";
+        el.style.background = "url('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/open_story.png') center center / contain no-repeat";
+        el.style.display = "inline-block";
+        el.style.visibility = "visible"; // Ensure it's not hidden
+    });
+});
 
 function getCenterElement(container) {
     // calculate the central point of the container
