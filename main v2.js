@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         setChartViewState(storedSelection);
-        redirectiFrames(baseiFrameSrc + storedSelection.timelineId, storedSelection.timelineId);
+        redirectiFrames(baseTimelineUrl_Main + storedSelection.timelineId, storedSelection.timelineId);
 
         // restore popup if needed
         if (showPopup){
