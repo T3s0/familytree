@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         false
     );
+
     const iframe = document.getElementById('tl-timeline-iframe');
     //const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
@@ -58,10 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
     }, 250);
- }, false);
-
-
-
+}, false);
 
 async function drawChart() {
     let fName = "https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv"; // Updated data source
@@ -152,4 +150,3 @@ function handleViewChoiceClick(viewChoice, setChecked) {
             initChartPopup(true);
         }
 }
-
