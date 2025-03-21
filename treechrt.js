@@ -1,5 +1,5 @@
 let fullTable;
-fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv')
+fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/data/familytreedata.csv')
     .then(response => response.text())
     .then(csvData => {
         let fullTable = new google.visualization.DataTable(); // Ensure new table is created
