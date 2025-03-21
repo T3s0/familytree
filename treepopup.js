@@ -32,20 +32,20 @@ function initChartPopup(callOpenPopup) {
   }
 }
 
-// function getTransformScale() {
-//   let tScale = 1;
-//   try {
-//     transform = document.getElementById("panzoom_container").style.transform;
-//     console.log("getTransformScale transform: " + JSON.stringify(transform));
-//     let start = transform.indexOf("(") + 1;
-//     let end = transform.indexOf(")");
-//     let matrix = transform.slice(start, end).split(",");
-//     tScale =  +matrix[0]; 
-//   } catch (error) {
-//     console.log("getTransformScale matrix error: " + error);
-//   }
-//   return tScale;
-// }
+ function getTransformScale() {
+  let tScale = 1;
+  try {
+    transform = document.getElementById("panzoom_container").style.transform;
+    console.log("getTransformScale transform: " + JSON.stringify(transform));
+     let start = transform.indexOf("(") + 1;
+    let end = transform.indexOf(")");
+    let matrix = transform.slice(start, end).split(",");
+     tScale =  +matrix[0]; 
+   } catch (error) {
+     console.log("getTransformScale matrix error: " + error);
+   }
+   return tScale;
+ }
 
 // restore previous popup state
 function captureAndSaveChartPopupState(shownFlag) {
