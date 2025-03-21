@@ -2,8 +2,8 @@ let fullTable;
 fetch('https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/data/familytreedata.csv')
     .then(response => response.text())
     .then(csvData => {
-        let fullTable = new google.visualization.DataTable(); // Ensure new table is created
-        prepChartTable(csvData, fullTable); // Pass fetched data to the existing function
+        fullTable = new google.visualization.DataTable(); // Use global variable
+        prepChartTable(csvData, fullTable); // Pass data to your function
     })
     .catch(error => {
         console.error("Error fetching tree data:", error);
