@@ -72,7 +72,7 @@ function AttachPanZoom(ele, minScale, maxScale, increment, liner) {
     if (newTrans.scale > this.maxScale) newTrans.scale = this.maxScale;
     if (!maxOrMinScale) {
       //  get element in center before move
-      centEl = getCenterElement().centerEl;
+      centEl = getCenterElement(ele).centerEl;
       cendElRect = centEl.getBoundingClientRect();
       if (cendElRect.right == 0){
         centEl = centEl.parentElement;
