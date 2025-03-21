@@ -3,6 +3,14 @@ let popup = document.getElementById("tree-popup");
 var r = document.getElementById('resizer');
 r.addEventListener('mousedown', initDrag, false);
 
+let popupState = {
+  shown: false,
+  left: 0,
+  top: 0,
+  height: 0,
+  width: 0,
+  scale: '1'
+};
 
 // restore previous popup state
 function initChartPopup(callOpenPopup) {
