@@ -58,11 +58,13 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
-    }, 250);
-}, false);
 
-//  Reuse your view logic to show timeline view by default
+        //  Reuse your view logic to show timeline view by default
 handleViewChoiceClick("view-timeline", true);
+    }, 250);
+
+
+
 
 async function drawChart() {
     let fName = "https://cdn.jsdelivr.net/gh/ReuvenT/family_history@latest/data/familytreedata.csv"; // Updated data source
