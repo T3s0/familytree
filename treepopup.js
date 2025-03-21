@@ -15,22 +15,35 @@ var popupState = {
 // restore previous popup state
 function initChartPopup(callOpenPopup) {
   let popupStateItem = localStorage.getItem("treePopupState");
-  if (popupStateItem != '[object Object]' && (typeof popupStateItem === 'string' || popupStateItem instanceof String)) {
-     popupState = JSON.parse(popupStateItem);
-    if (popupState) {
-      console.log("initChartPopup callOpenPopup, popupState: " + callOpenPopup + ", " + JSON.stringify(popupState));
-      popup.style.top = (popupState.top) + "px";
-      popup.style.left = (popupState.left) + "px";
-      popup.style.width = (popupState.width) + "px";
-      popup.style.height = (popupState.height) + "px";
-      if (callOpenPopup && popupState && popupState.shown) {
-        let matrix = 'matrix(' + popup.style.scale + ', 0, 0, ' + popup.style.scale + ', 0, 0)';
-        //document.getElementById("panzoom_container").style.transform = matrix;
-        openOrgChartPopup();
-      }
+  try {
+    if (popupStateItem != '[object Object]' && typeof popupStateItem === 'string') {
+      popupState = JSON.parse(popupStateItem);
+    }
+  } catch (e) {
+    console.warn("Failed to parse popupStateItem:", e);
+    popupState = {
+      shown: false,
+      left: 0,
+      top: 0,
+      height: 0,
+      width: 0,
+      scale: '1'
+    };
+  }
+
+  if (popupState) {
+    console.log("initChartPopup callOpenPopup, popupState: " + callOpenPopup + ", " + JSON.stringify(popupState));
+    popup.style.top = popupState.top + "px";
+    popup.style.left = popupState.left + "px";
+    popup.style.width = popupState.width + "px";
+    popup.style.height = popupState.height + "px";
+
+    if (callOpenPopup && popupState.shown) {
+      openOrgChartPopup();
     }
   }
 }
+
 
  function getTransformScale() {
   let tScale = 1;
