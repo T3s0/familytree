@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         false
     );
-
     const iframe = document.getElementById('tl-timeline-iframe');
     //const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
-         
     }, 250);
  }, false);
 
