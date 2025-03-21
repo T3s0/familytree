@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         false
     );
-
+// Reuse your view logic to show timeline view by default
+handleViewChoiceClick("view-timeline", true);
     const iframe = document.getElementById('tl-timeline-iframe');
     //const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
