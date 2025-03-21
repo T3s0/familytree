@@ -80,19 +80,7 @@ function captureAndSaveChartPopupState(shownFlag) {
       pState.shown = shownFlag;
     }
   }
-  // safeguards:
-  if (pState.left < 1) {
-    pState.left = 1;
-  }
-  if (pState.top < 1) {
-    pState.top = 1;
-  }
-  if (pState.width < 300) {
-    pState.width = 300;
-  }
-  if (pState.height < 150) {
-    pState.height = 150;
-  }
+
 
   console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
   localStorage.setItem("treePopupState", JSON.stringify(pState));
