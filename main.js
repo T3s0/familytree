@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
-
+            handleViewChoiceClick("view-timeline", true);
     }, 250);
  }, false);
 
