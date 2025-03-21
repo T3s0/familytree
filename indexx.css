@@ -1,0 +1,344 @@
+/* .imageContainer {
+  display:inline-block;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: #808080;
+  max-width: 100%;
+  overflow: hidden;
+} */
+
+body {
+  background-color: lightgrey;
+  /* overflow:hidden; */
+  min-height: 100%
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#tree-popup-btn {
+  margin-bottom: -3px;
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+
+}
+
+.close-popup-btn {
+  font: 1.5rem 'Fira Sans', sans-serif;
+  border: 0 none transparent;
+  background: none;
+  color: rgb(20, 17, 17);
+  min-width: 30px; 
+  float: right;
+}
+
+label,
+legend {
+  font:
+    1rem "Fira Sans",
+    sans-serif;
+  color: rgb(20, 17, 17);
+}
+
+input {
+  margin: 0.4rem;
+}
+
+.fullScreen {
+  width: 99%;
+  height: 99%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  /* display: block; */
+}
+
+.tl-span-id {
+  display: none;
+}
+
+.tl-link-btn {
+  height: 24px;
+  background: url(https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/open_story.png) no-repeat center;
+  display: block;
+  /* padding-bottom: 35px;
+  margin-bottom: 30px; */
+  /* text-align: center; */
+}
+
+#orgchart-container {
+  display: none;
+  /* border: 1px solid black;  */
+  background-color: white;
+  overflow-x: clip;
+  overflow-y: clip;
+  /* width: inherit;
+  height: inherit; */
+}
+
+.oc-wid-node {
+  min-width: 92px;
+  font-size: large;
+  /* text-align: center; */
+}
+
+.oc-med-node {
+  min-width: 75px;
+  font-size: large;
+  /* text-align: center; */
+}
+
+
+.oc-nar-node {
+  min-width: 66px;
+  font-size: larger;
+}
+
+.tl-button {
+  height: 30px;
+  width: 40px;
+}
+
+.tl-button img {
+  width: 42px;
+  height: 30px;
+}
+
+.hide-popup {
+  display: none;
+}
+
+#tree-popup {
+  position: absolute;
+  top: 400px;
+  min-width: 150px;
+  /* width: 480px;
+  height: 550px; 
+  box-sizing: border-box;*/
+  z-index: 100;
+  background-color: #f1f1f1;
+  text-align: center;
+  /* border: 1px solid #d3d3d3; */
+}
+
+#tree-popup-header {
+  padding: 6px;
+  /* margin-bottom: 4px; */
+  max-height: 60px;
+  cursor: move;
+  z-index: 10;
+  background-color: #65bee7;
+  /* color: darkblue; */
+  font:
+    1rem "Fira Sans",
+    sans-serif;
+  color: rgb(20, 17, 17);
+}
+
+.resizable {
+  position: relative;
+  overflow: hidden;
+}
+
+/* triangle to move popup */
+.resizer {
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-left: 20px solid #65bee7;
+  border-bottom: 20px solid transparent;
+  position: absolute;
+  right: -3px;
+  bottom: -13px;
+  cursor: se-resize;
+  transform: rotate(45deg);
+}
+
+/*
+ * Made by Erik Terwan
+ * 24th of November 2015
+ * MIT License
+ *
+ *
+ * If you are thinking of using this in
+ * production code, beware of the browser
+ * prefixes.
+ */
+
+
+
+/* Menu code starts here */
+
+#tl-menu-toggle {
+  display: block;
+  /* You can also use relative/absolute here if you want to stay on the top */
+  position: fixed;
+  top: 13px;
+  left: 14px;
+
+  z-index: 1;
+  color: black;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#tl-menu-toggle a {
+  text-decoration: none;
+  color: #232323;
+  font: 1rem "Fira Sans", sans-serif;
+  transition: color 0.3s ease;
+}
+
+
+#tl-menu-toggle input {
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+
+  cursor: pointer;
+
+  opacity: 0;
+  /* hide this */
+  z-index: 2;
+  /* and place it over the hamburger */
+
+  -webkit-touch-callout: none;
+}
+
+/*
+  * Just a quick hamburger
+  */
+.burger-slice {
+  display: block;
+  width: 21px;
+  height: 3px;
+  margin-bottom: 3px;
+  position: relative;
+  background: black;
+  border-radius: 1px;
+  z-index: 1;
+  transform-origin: 4px 0px;
+
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+    opacity 0.55s ease;
+}
+
+span.tl-menu-prefix {
+  display: inline-block;
+  margin: 0 8px -2px 0;
+  border-style: solid;
+  border-color: black;
+  overflow: hidden;
+  border-width: thin;
+}
+
+span.tl-menu-prefix:hover {
+  border-color: tomato;
+}
+
+#tl-menu-toggle a:hover {
+  color: tomato;
+}
+
+
+span.tl-menu-1 {
+  width: 15px;
+  background: #04610A;
+  color: #04610A;
+  opacity: 50%;
+  border-width: 2px;
+}
+
+span.tl-menu-2 {
+  width: 15px;
+  margin-left: 15px;
+  background: #FF9933;
+  color: #FF9933;
+  opacity: 80%;
+}
+
+span.tl-menu-3 {
+  width: 15px;
+  margin-left: 30px;
+  display: inline-block;
+  background: #F2D392;
+  color: #F2D392;
+  ;
+  border-style: solid;
+  border-color: black;
+}
+
+
+#tl-menu-toggle .burger-slice:first-child {
+  transform-origin: 0% 0%;
+}
+
+#tl-menu-toggle .burger-slice:nth-last-child(2) {
+  transform-origin: 0% 100%;
+}
+
+#tl-menu-toggle input:checked~.burger-slice {
+  opacity: 1;
+  transform: rotate(45deg) translate(0, -2%);
+  background: #232323;
+}
+
+#tl-menu-toggle input:checked~.burger-slice:nth-last-child(3) {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+#tl-menu-toggle input:checked~.burger-slice:nth-last-child(2) {
+  transform: rotate(-45deg) translate(0, 1%);
+}
+
+#tl-menu {
+  position: absolute;
+  max-width: 300px;
+  width: 100vw;
+  max-height: 100vh;
+  margin: 60px 0 0 -6px;
+  /* padding-left: 50px; */
+  padding-top: 5px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: rgb(212, 210, 210);
+  list-style-type: none;
+  border-radius: 3px;
+  -webkit-font-smoothing: antialiased;
+  padding-left: 20px;
+
+  /* to stop flickering of text in safari */
+
+  transform-origin: 0% 0%;
+  transform: translate(-120%, 0);
+
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+}
+
+#tl-menu li {
+  padding: 5px 0;
+  font-size: 12px;
+}
+
+#tl-menu li label {
+  cursor: pointer;
+}
+
+/*
+  * And let's slide it in from the left
+  */
+#tl-menu-toggle input:checked~ul {
+  transform: none;
+}
