@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     iframe.addEventListener('load', () => {
         console.log('iFrame loaded');
+
+           handleViewChoiceClick("view-timeline", true);
     });
 
     iframe.onload = function () {
@@ -58,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
-            handleViewChoiceClick("view-timeline", true);
+         
     }, 250);
  }, false);
 
