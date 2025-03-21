@@ -6,59 +6,43 @@ r.addEventListener('mousedown', initDrag, false);
 
 
 // restore previous popup state
-function xinitChartPopup(callOpenPopup) {
-  let popupState = getChartViewState();
-  console.log("initChartPopup callOpenPopup: " + callOpenPopup + ", popupState: " + JSON.stringify(popupState));
-  popup.style.top = (popupState.top) + "px";
-  popup.style.left = (popupState.left) + "px";
-  popup.style.width = (popupState.width) + "px";
-  popup.style.height = (popupState.height) + "px";
-  if (callOpenPopup && popupState.popUpShown) {
-    let matrix = 'matrix(' + popup.style.popupScale + ', 0, 0, ' + popup.style.popupScale + ', 0, 0)';
-    document.getElementById("panzoom_container").style.transform = matrix;
-    openOrgChartPopup();
-  }
-  popupState.popUpShown = callOpenPopup;
-  setChartViewState(popupState)
-}
-
 function captureAndSaveChartPopupState(shownFlag) {
   var pState;
-  
-  if (typeof popup !== 'undefined' && popup && popup.getBoundingClientRect) {
-    let rect = popup.getBoundingClientRect();
-    if (rect.width > 30 && rect.height > 50) {
-      pState = {
-        shown: shownFlag,
-        left: rect.left,
-        top: rect.top,
-        height: rect.height,
-        width: rect.width,
-        scale: getTransformScale()
-      };
-    }
-  }
-
-  // If popup state was not defined from DOM, try getting from localStorage
-  if (!pState) {
+  let rect = popup.getBoundingClientRect();
+  if (rect.width > 30 && rect.height > 50) {
+    pState = {
+      shown: shownFlag,
+      left: rect.left,
+      top: rect.top,
+      height: rect.height,
+      width: rect.width,
+      scale: getTransformScale()
+    };
+  } else {
+    // container is no longer available use values in localstorage
     let popupStateItem = localStorage.getItem("treePopupState");
-    try {
-      if (
-        popupStateItem &&
-        popupStateItem !== '[object Object]' &&
-        (typeof popupStateItem === 'string' || popupStateItem instanceof String)
-      ) {
+    if (
+      popupStateItem != '[object Object]' &&
+      (typeof popupStateItem === 'string' || popupStateItem instanceof String)
+    ) {
+      try {
         pState = JSON.parse(popupStateItem);
         pState.scale = getTransformScale();
         pState.shown = shownFlag;
+      } catch (e) {
+        console.error("Failed to parse popup state from localStorage:", e);
       }
-    } catch (e) {
-      console.warn("Failed to parse popup state from localStorage", e);
     }
   }
 
-  // If still no valid state, set default safe values
-  if (!pState) {
+  // safeguard wrapper
+  if (pState && typeof pState.left !== 'undefined') {
+    if (pState.left < 1) pState.left = 1;
+    if (pState.top < 1) pState.top = 1;
+    if (pState.width < 300) pState.width = 300;
+    if (pState.height < 150) pState.height = 150;
+  } else {
+    console.error("pState is undefined or incomplete. Using fallback values.");
     pState = {
       shown: shownFlag,
       left: 1,
@@ -68,6 +52,11 @@ function captureAndSaveChartPopupState(shownFlag) {
       scale: 1
     };
   }
+
+  console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
+  localStorage.setItem("treePopupState", JSON.stringify(pState));
+}
+
 
   // Final safeguards
   if (pState.left < 1) pState.left = 1;
