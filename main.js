@@ -59,9 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
             redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
 
-        //  Reuse your view logic to show timeline view by default
-handleViewChoiceClick("view-timeline", true);
     }, 250);
+ }, false);
 
 
 
