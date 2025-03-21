@@ -43,19 +43,47 @@ function initChartPopup(callOpenPopup) {
 function captureAndSaveChartPopupState(shownFlag) {
   var pState;
   let rect = popup.getBoundingClientRect();
+
+  // Try to create pState from the element's dimensions if they're large enough.
   if (rect.width > 30 && rect.height > 50) {
-    pState = { shown: shownFlag, left: rect.left, top: rect.top, height: rect.height, width: rect.width, scale: getTransformScale() };
-  }
-  else{
-    // container is no longer available use values in localstorage
+    pState = { 
+      shown: shownFlag, 
+      left: rect.left, 
+      top: rect.top, 
+      height: rect.height, 
+      width: rect.width, 
+      scale: typeof getTransformScale === "function" ? getTransformScale() : 1 
+    };
+  } else {
+    // Try to retrieve and parse a stored popup state.
     let popupStateItem = localStorage.getItem("treePopupState");
-    if (popupStateItem != '[object Object]' && (typeof popupStateItem === 'string' || popupStateItem instanceof String)) {
-      pState = JSON.parse(popupStateItem);
-      pState.scale = getTransformScale();
-      pState.shown = shownFlag;
+    if (popupStateItem) {
+      try {
+        pState = JSON.parse(popupStateItem);
+      } catch (error) {
+        console.error("Error parsing popup state from localStorage:", error);
+      }
+      // Update values if we got a state.
+      if (pState) {
+        pState.scale = typeof getTransformScale === "function" ? getTransformScale() : 1;
+        pState.shown = shownFlag;
+      }
     }
   }
-  // safeguards:
+
+  // Fallback default state if pState is still undefined.
+  if (!pState) {
+    pState = { 
+      shown: shownFlag, 
+      left: 1, 
+      top: 1, 
+      height: 150, 
+      width: 300, 
+      scale: 1 
+    };
+  }
+
+  // Safeguards to ensure minimum values.
   if (pState.left < 1) {
     pState.left = 1;
   }
@@ -72,6 +100,7 @@ function captureAndSaveChartPopupState(shownFlag) {
   console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
   localStorage.setItem("treePopupState", JSON.stringify(pState));
 }
+
 
 function toggleOrgChartPopup() {
   if (popup.style.display == "none") {
