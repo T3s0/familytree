@@ -1,4 +1,4 @@
-let popup_Tree = document.getElementById("tree-popup");
+let popup = document.getElementById("tree-popup");
 //const popupStateItem = localStorage.getItem("treePopupState");
 var r = document.getElementById('resizer');
 r.addEventListener('mousedown', initDrag, false);
