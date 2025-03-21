@@ -31,8 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     iframe.addEventListener('load', () => {
         console.log('iFrame loaded');
-
-           handleViewChoiceClick("view-timeline", true);
     });
 
     iframe.onload = function () {
