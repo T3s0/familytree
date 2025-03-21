@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // All your other functions go here...
 
-});
+
 
 // restore previous popup state
 function initChartPopup(callOpenPopup) {
@@ -213,3 +213,4 @@ function dragElement(elmnt) {
 
   }
 }
+  });
