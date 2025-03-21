@@ -1,16 +1,22 @@
-let popup = document.getElementById("tree-popup");
-//const popupStateItem = localStorage.getItem("treePopupState");
-var r = document.getElementById('resizer');
-r.addEventListener('mousedown', initDrag, false);
+document.addEventListener("DOMContentLoaded", function () {
+  let popup = document.getElementById("tree-popup");
+  let r = document.getElementById('resizer');
 
-var popupState = {
-  shown: false,
-  left: 0,
-  top: 0,
-  height: 0,
-  width: 0,
-  scale: '1'
-};
+  // ⬇ Move all your code inside this function block
+  r.addEventListener('mousedown', initDrag, false);
+
+  var popupState = {
+    shown: false,
+    left: 0,
+    top: 0,
+    height: 0,
+    width: 0,
+    scale: '1'
+  };
+
+  // All your other functions go here...
+
+});
 
 // restore previous popup state
 function initChartPopup(callOpenPopup) {
