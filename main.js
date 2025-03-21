@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
 
+    function redirectiFrames(timeframeUrl, orgChartElId) {
+    redirectTimelineiFrame(timeframeUrl);
+    navigateToNode(orgChartElId, false); // This line assumes navigateToNode is already defined elsewhere
+}
+
+
     setTimeout(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectedTimeline = decodeURI(urlParams.get('newtimeline'));
@@ -58,6 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             redirectiFrames(baseTimelineUrl_Main + rootTimeline, rootTimeline);
         }
+
+            handleViewChoiceClick("view-timeline", true);
     }, 250);
 }, false);
 
