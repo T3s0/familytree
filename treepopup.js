@@ -23,54 +23,62 @@ function xinitChartPopup(callOpenPopup) {
 }
 
 function captureAndSaveChartPopupState(shownFlag) {
-  let mode = "popup";
-  let pState = getChartViewState();
-  pState.popUpShown = shownFlag;
-  let elCount = getCenterElement(document.getElementById("orgchart-container")).visibleCount;
-  let rect = popup.getBoundingClientRect();
-  if (rect.width > 30 && rect.height > 50) {
-    pState.left = rect.left; 
-    pState.top = rect.top; 
-    pState.height = rect.height; 
-    pState.width = rect.width;
-    //pState.popupScale = getTransformScale(elCount, true);
-    // capture the "current" tree node
-    //captureAndSaveCurrentNodeState();
-    var selectedItem = chart.getSelection()[0];
-    if (selectedItem && selectedItem.hasOwnProperty('row')) {
-      pState.row = selectedItem.row;
-      pState.isSelected = true;
-      pState.timelineId = extractTimelineIdFromURL(fullTable.getValue(selectedItem.row, 3));
-    }
-    else {
-        let currentEl = getCenterElement().centerEl;
-        pState.row = (!currentEl) ? -1 : currentEl.getAttribute('data-row');
-        pState.isSelected = false;
+  var pState;
+  
+  if (typeof popup !== 'undefined' && popup && popup.getBoundingClientRect) {
+    let rect = popup.getBoundingClientRect();
+    if (rect.width > 30 && rect.height > 50) {
+      pState = {
+        shown: shownFlag,
+        left: rect.left,
+        top: rect.top,
+        height: rect.height,
+        width: rect.width,
+        scale: getTransformScale()
+      };
     }
   }
-  else{
-    //pState.fullScale = getTransformScale(elCount, false);
-    mode = "full";
+
+  // If popup state was not defined from DOM, try getting from localStorage
+  if (!pState) {
+    let popupStateItem = localStorage.getItem("treePopupState");
+    try {
+      if (
+        popupStateItem &&
+        popupStateItem !== '[object Object]' &&
+        (typeof popupStateItem === 'string' || popupStateItem instanceof String)
+      ) {
+        pState = JSON.parse(popupStateItem);
+        pState.scale = getTransformScale();
+        pState.shown = shownFlag;
+      }
+    } catch (e) {
+      console.warn("Failed to parse popup state from localStorage", e);
+    }
   }
 
-  // safeguards:
-  if (pState.left < 1) {
-    pState.left = 1;
-  }
-  if (pState.top < 1) {
-    pState.top = 1;
-  }
-  if (pState.width < 300 || pState.width > 800) {
-    pState.width = 300;
-  }
-  if (pState.height < 150 || pState.height > 800) {
-    pState.height = 750;
+  // If still no valid state, set default safe values
+  if (!pState) {
+    pState = {
+      shown: shownFlag,
+      left: 1,
+      top: 1,
+      height: 300,
+      width: 300,
+      scale: 1
+    };
   }
 
-  console.log("captureChartPopupState (" + mode + ") popupState: " + JSON.stringify(pState));
-  setChartViewState(pState);
-  return pState.popupScale;
+  // Final safeguards
+  if (pState.left < 1) pState.left = 1;
+  if (pState.top < 1) pState.top = 1;
+  if (pState.width < 300) pState.width = 300;
+  if (pState.height < 150) pState.height = 150;
+
+  console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
+  localStorage.setItem("treePopupState", JSON.stringify(pState));
 }
+
 
 function toggleOrgChartPopup() {
   if (popup.style.display == "none") {
