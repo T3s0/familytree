@@ -3,7 +3,7 @@ let popup = document.getElementById("tree-popup");
 var r = document.getElementById('resizer');
 r.addEventListener('mousedown', initDrag, false);
 
-let popupState = {
+var popupState = {
   shown: false,
   left: 0,
   top: 0,
@@ -16,7 +16,7 @@ let popupState = {
 function initChartPopup(callOpenPopup) {
   let popupStateItem = localStorage.getItem("treePopupState");
   if (popupStateItem != '[object Object]' && (typeof popupStateItem === 'string' || popupStateItem instanceof String)) {
-    let popupState = JSON.parse(popupStateItem);
+     popupState = JSON.parse(popupStateItem);
     if (popupState) {
       console.log("initChartPopup callOpenPopup, popupState: " + callOpenPopup + ", " + JSON.stringify(popupState));
       popup.style.top = (popupState.top) + "px";
