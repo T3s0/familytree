@@ -1,77 +1,46 @@
-document.addEventListener("DOMContentLoaded", function () {
-  let popup = document.getElementById("tree-popup");
-  let r = document.getElementById('resizer');
-
-  // ⬇ Move all your code inside this function block
-  r.addEventListener('mousedown', initDrag, false);
-
-  var popupState = {
-    shown: false,
-    left: 0,
-    top: 0,
-    height: 0,
-    width: 0,
-    scale: '1'
-  };
-
-  // All your other functions go here...
-
+let popup = document.getElementById("tree-popup");
+//const popupStateItem = localStorage.getItem("treePopupState");
+var r = document.getElementById('resizer');
+r.addEventListener('mousedown', initDrag, false);
 
 
 // restore previous popup state
 function initChartPopup(callOpenPopup) {
   let popupStateItem = localStorage.getItem("treePopupState");
-  try {
-    if (popupStateItem != '[object Object]' && typeof popupStateItem === 'string') {
-      popupState = JSON.parse(popupStateItem);
-    }
-  } catch (e) {
-    console.warn("Failed to parse popupStateItem:", e);
-    popupState = {
-      shown: false,
-      left: 0,
-      top: 0,
-      height: 0,
-      width: 0,
-      scale: '1'
-    };
-  }
-
-  if (popupState) {
-    console.log("initChartPopup callOpenPopup, popupState: " + callOpenPopup + ", " + JSON.stringify(popupState));
-    popup.style.top = popupState.top + "px";
-    popup.style.left = popupState.left + "px";
-    popup.style.width = popupState.width + "px";
-    popup.style.height = popupState.height + "px";
-
-    if (callOpenPopup && popupState.shown) {
-      openOrgChartPopup();
+  if (popupStateItem != '[object Object]' && (typeof popupStateItem === 'string' || popupStateItem instanceof String)) {
+    let popupState = JSON.parse(popupStateItem);
+    if (popupState) {
+      console.log("initChartPopup callOpenPopup, popupState: " + callOpenPopup + ", " + JSON.stringify(popupState));
+      popup.style.top = (popupState.top) + "px";
+      popup.style.left = (popupState.left) + "px";
+      popup.style.width = (popupState.width) + "px";
+      popup.style.height = (popupState.height) + "px";
+      if (callOpenPopup && popupState && popupState.shown) {
+        let matrix = 'matrix(' + popup.style.scale + ', 0, 0, ' + popup.style.scale + ', 0, 0)';
+        //document.getElementById("panzoom_container").style.transform = matrix;
+        openOrgChartPopup();
+      }
     }
   }
 }
 
-
- function getTransformScale() {
-  let tScale = 1;
-  try {
-    transform = document.getElementById("panzoom_container").style.transform;
-    console.log("getTransformScale transform: " + JSON.stringify(transform));
-     let start = transform.indexOf("(") + 1;
-    let end = transform.indexOf(")");
-    let matrix = transform.slice(start, end).split(",");
-     tScale =  +matrix[0]; 
-   } catch (error) {
-     console.log("getTransformScale matrix error: " + error);
-   }
-   return tScale;
- }
+// function getTransformScale() {
+//   let tScale = 1;
+//   try {
+//     transform = document.getElementById("panzoom_container").style.transform;
+//     console.log("getTransformScale transform: " + JSON.stringify(transform));
+//     let start = transform.indexOf("(") + 1;
+//     let end = transform.indexOf(")");
+//     let matrix = transform.slice(start, end).split(",");
+//     tScale =  +matrix[0]; 
+//   } catch (error) {
+//     console.log("getTransformScale matrix error: " + error);
+//   }
+//   return tScale;
+// }
 
 // restore previous popup state
 function captureAndSaveChartPopupState(shownFlag) {
-    if (typeof popupState === 'undefined') {
-    console.warn('popupState is undefined in captureAndSaveChartPopupState. Skipping save.');
-    return;
-  }
   var pState;
   let rect = popup.getBoundingClientRect();
   if (rect.width > 30 && rect.height > 50) {
@@ -86,7 +55,19 @@ function captureAndSaveChartPopupState(shownFlag) {
       pState.shown = shownFlag;
     }
   }
-
+  // safeguards:
+  if (pState.left < 1) {
+    pState.left = 1;
+  }
+  if (pState.top < 1) {
+    pState.top = 1;
+  }
+  if (pState.width < 300) {
+    pState.width = 300;
+  }
+  if (pState.height < 150) {
+    pState.height = 150;
+  }
 
   console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
   localStorage.setItem("treePopupState", JSON.stringify(pState));
@@ -213,4 +194,3 @@ function dragElement(elmnt) {
 
   }
 }
-  });
