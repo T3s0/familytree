@@ -10,62 +10,42 @@ function captureAndSaveChartPopupState(shownFlag) {
   var pState;
   let rect = popup.getBoundingClientRect();
   if (rect.width > 30 && rect.height > 50) {
-    pState = {
-      shown: shownFlag,
-      left: rect.left,
-      top: rect.top,
-      height: rect.height,
-      width: rect.width,
-      scale: getTransformScale()
-    };
-  } else {
+    pState = { shown: shownFlag, left: rect.left, top: rect.top, height: rect.height, width: rect.width, scale: getTransformScale() };
+  }
+  else{
     // container is no longer available use values in localstorage
     let popupStateItem = localStorage.getItem("treePopupState");
-    if (
-      popupStateItem != '[object Object]' &&
-      (typeof popupStateItem === 'string' || popupStateItem instanceof String)
-    ) {
-      try {
-        pState = JSON.parse(popupStateItem);
-        pState.scale = getTransformScale();
-        pState.shown = shownFlag;
-      } catch (e) {
-        console.error("Failed to parse popup state from localStorage:", e);
-      }
+    if (popupStateItem != '[object Object]' && (typeof popupStateItem === 'string' || popupStateItem instanceof String)) {
+      pState = JSON.parse(popupStateItem);
+      pState.scale = getTransformScale();
+      pState.shown = shownFlag;
     }
   }
-
-  // safeguard wrapper
-  if (pState && typeof pState.left !== 'undefined') {
-    if (pState.left < 1) pState.left = 1;
-    if (pState.top < 1) pState.top = 1;
-    if (pState.width < 300) pState.width = 300;
-    if (pState.height < 150) pState.height = 150;
-  } else {
-    console.error("pState is undefined or incomplete. Using fallback values.");
-    pState = {
-      shown: shownFlag,
-      left: 1,
-      top: 1,
-      height: 300,
-      width: 300,
-      scale: 1
-    };
+  // safeguards:
+  if (pState.left < 1) {
+    pState.left = 1;
+  }
+  if (pState.top < 1) {
+    pState.top = 1;
+  }
+  if (pState.width < 300) {
+    pState.width = 300;
+  }
+  if (pState.height < 150) {
+    pState.height = 150;
   }
 
   console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
   localStorage.setItem("treePopupState", JSON.stringify(pState));
 }
 
-
-  // Final safeguards
-  if (pState.left < 1) pState.left = 1;
-  if (pState.top < 1) pState.top = 1;
-  if (pState.width < 300) pState.width = 300;
-  if (pState.height < 150) pState.height = 150;
-
-  console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
-  localStorage.setItem("treePopupState", JSON.stringify(pState));
+function toggleOrgChartPopup() {
+  if (popup.style.display == "none") {
+    openOrgChartPopup();
+  }
+  else {
+    closeChartPopup();
+  }
 }
 
 
