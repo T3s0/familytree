@@ -1,26 +1,56 @@
-let popup = document.getElementById("tree-popup");
-//const popupStateItem = localStorage.getItem("treePopupState");
+const popup = document.getElementById("tree-popup");
 var r = document.getElementById('resizer');
 r.addEventListener('mousedown', initDrag, false);
 
 
-
 // restore previous popup state
+function xinitChartPopup(callOpenPopup) {
+  let popupState = getChartViewState();
+  console.log("initChartPopup callOpenPopup: " + callOpenPopup + ", popupState: " + JSON.stringify(popupState));
+  popup.style.top = (popupState.top) + "px";
+  popup.style.left = (popupState.left) + "px";
+  popup.style.width = (popupState.width) + "px";
+  popup.style.height = (popupState.height) + "px";
+  if (callOpenPopup && popupState.popUpShown) {
+    let matrix = 'matrix(' + popup.style.popupScale + ', 0, 0, ' + popup.style.popupScale + ', 0, 0)';
+    document.getElementById("panzoom_container").style.transform = matrix;
+    openOrgChartPopup();
+  }
+  popupState.popUpShown = callOpenPopup;
+  setChartViewState(popupState)
+}
+
 function captureAndSaveChartPopupState(shownFlag) {
-  var pState;
+  let mode = "popup";
+  let pState = getChartViewState();
+  pState.popUpShown = shownFlag;
+  let elCount = getCenterElement(document.getElementById("orgchart-container")).visibleCount;
   let rect = popup.getBoundingClientRect();
   if (rect.width > 30 && rect.height > 50) {
-    pState = { shown: shownFlag, left: rect.left, top: rect.top, height: rect.height, width: rect.width, scale: getTransformScale() };
-  }
-  else{
-    // container is no longer available use values in localstorage
-    let popupStateItem = localStorage.getItem("treePopupState");
-    if (popupStateItem != '[object Object]' && (typeof popupStateItem === 'string' || popupStateItem instanceof String)) {
-      pState = JSON.parse(popupStateItem);
-      pState.scale = getTransformScale();
-      pState.shown = shownFlag;
+    pState.left = rect.left; 
+    pState.top = rect.top; 
+    pState.height = rect.height; 
+    pState.width = rect.width;
+    //pState.popupScale = getTransformScale(elCount, true);
+    // capture the "current" tree node
+    //captureAndSaveCurrentNodeState();
+    var selectedItem = chart.getSelection()[0];
+    if (selectedItem && selectedItem.hasOwnProperty('row')) {
+      pState.row = selectedItem.row;
+      pState.isSelected = true;
+      pState.timelineId = extractTimelineIdFromURL(fullTable.getValue(selectedItem.row, 3));
+    }
+    else {
+        let currentEl = getCenterElement().centerEl;
+        pState.row = (!currentEl) ? -1 : currentEl.getAttribute('data-row');
+        pState.isSelected = false;
     }
   }
+  else{
+    //pState.fullScale = getTransformScale(elCount, false);
+    mode = "full";
+  }
+
   // safeguards:
   if (pState.left < 1) {
     pState.left = 1;
@@ -28,26 +58,17 @@ function captureAndSaveChartPopupState(shownFlag) {
   if (pState.top < 1) {
     pState.top = 1;
   }
-  if (pState.width < 300) {
+  if (pState.width < 300 || pState.width > 800) {
     pState.width = 300;
   }
-  if (pState.height < 150) {
-    pState.height = 150;
+  if (pState.height < 150 || pState.height > 800) {
+    pState.height = 750;
   }
 
-  console.log("captureChartPopupState popupState: " + JSON.stringify(pState));
-  localStorage.setItem("treePopupState", JSON.stringify(pState));
+  console.log("captureChartPopupState (" + mode + ") popupState: " + JSON.stringify(pState));
+  setChartViewState(pState);
+  return pState.popupScale;
 }
-
-function toggleOrgChartPopup() {
-  if (popup.style.display == "none") {
-    openOrgChartPopup();
-  }
-  else {
-    closeChartPopup();
-  }
-}
-
 
 function toggleOrgChartPopup() {
   if (popup.style.display == "none") {
