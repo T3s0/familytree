@@ -49,6 +49,10 @@ function initChartPopup(callOpenPopup) {
 
 // restore previous popup state
 function captureAndSaveChartPopupState(shownFlag) {
+    if (typeof popupState === 'undefined') {
+    console.warn('popupState is undefined in captureAndSaveChartPopupState. Skipping save.');
+    return;
+  }
   var pState;
   let rect = popup.getBoundingClientRect();
   if (rect.width > 30 && rect.height > 50) {
