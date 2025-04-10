@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 
     async function drawChart() {
-        let fName = "/data/familytreedata.csv";
+        let fName = "https://cdn.jsdelivr.net/gh/ReuvenT/family_history/data/familytreedata.csv";
         const response = await fetch(fName);
         const data = await response.text();
 
