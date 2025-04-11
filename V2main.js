@@ -288,7 +288,7 @@ async function log_in_out () {
     }
     else{
         try {
-            let targetUrl = "";
+            let targetUrl = "https://timeline-fda0a6.webflow.io/webapp-timelines-copy";
             console.log("Logging in", targetUrl);
         
             const options = {
