@@ -1,30 +1,37 @@
 const baseiFrameSrc = 'https://www.tiki-toki.com/timeline/embed/';
-const rootTimeline = "2138285/2648138406/";
+var rootTimeline = "2138285/2648138406/";   // can be overridden by value in root node in chart
+// The Auth0 client, initialized in configureClient()
+let auth0Client = null;
+let isAuthenticated = false;
 
+window.onload = async () => {
+    await configureClient();
+    await refreshLoginStatus();
+    
+    let chartNodes = prepChartTable(familyTreeSource, isAuthenticated)
+    //let itemCount = (JSON.stringify(chartNodes).match(/\"id\":/g) || []).length;
+    //let leafCount = (JSON.stringify(chartNodes).match(/isLeaf\":true/g) || []).length; // (JSON.stringify(result).match(/isLeaf\":true /g) || []).length;;
+    //console.log("chartTable row count: " + itemCount + ", leaf count: " + leafCount);
 
-window.onload = function () {
-    // Here is how you would call the libary
+    if (chartNodes.length) {
+        let htmlTable = createTable(chartNodes[0], chartNodes[0].children.length, 0, isAuthenticated);
+        let container = document.getElementById("chart_container");
+        container.appendChild(htmlTable);
+
+        let rootDiv = document.querySelectorAll("[data-parentId='root']")[0];
+        rootTimeline = rootDiv.getAttribute('data-timelineid');
+        var style = rootDiv.currentStyle || window.getComputedStyle(rootDiv);
+        rootMarginDiff = 12; //style.marginTop;
+
+        alignChildrenRows('root');
+    }
+
     PanZoom(".panzoom");
+
 }
-
-google.charts.load('current', { packages: ["orgchart"] });
-google.charts.setOnLoadCallback(drawChart);
-
-// popup test //document.getElementById("tree-popup").classList.add("hide-popup")
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log("parent document ready");
-    const iframe = document.getElementById('tl-timeline-iframe');
-
-    iframe.addEventListener('load', () => {
-        console.log('iFrame loaded');
-    });
-
-    iframe.onload = function () {
-        console.log('Iframe content loaded or reloaded');
-    };
-
-
     setTimeout(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectedTimeline = decodeURI(urlParams.get('newtimeline'));
@@ -36,61 +43,66 @@ document.addEventListener('DOMContentLoaded', function () {
             storedSelection.timelineId = redirectedTimeline;
         }
         else {
-            console.log("default launch " + storedSelection.row + " with timelineId " + storedSelection.timelineId);
-        }
-        if (storedSelection.row >= 0){
-            storedSelection.isSelected = true;
-            if (storedSelection.popUpShown ){
-                displayPopup = true;
-                storedSelection.popUpShown = false;
+            console.log("default launch " + storedSelection.currentId + " with timelineId " + storedSelection.timelineId);
+            if (storedSelection.timelineId == null) {
+                storedSelection.timelineId = "2138285/2648138406/";
             }
+        }
+
+        if (storedSelection.currentId) {
+            if (storedSelection.isSelected) {
+                nodeIdSetSelected(storedSelection.currentId);
+            }
+            if (storedSelection.showPopUp) {
+                displayPopup = true;
+                storedSelection.showPopUp = false;
+            }
+        }
+        if (!storedSelection.timelineId) {
+            storedSelection.timelineId = rootTimeline;
         }
         setChartViewState(storedSelection);
         redirectiFrames(baseiFrameSrc + storedSelection.timelineId, storedSelection.timelineId);
 
         // restore popup if needed
-        if (showPopup){
-            setTimeout((row) => {
-                showNode(document.querySelector('[data-row="' + (row) + '"]'), false, true)
-            }, 250, storedSelection.row);
-        }
+        setTimeout((id) => {
+            if (!isAuthenticated && storedSelection.timelineId != rootTimeline) {
+                storedSelection.timelineId = rootTimeline;
+                setChartViewState(storedSelection);
+                redirectiFrames(baseiFrameSrc + storedSelection.timelineId, storedSelection.timelineId);
+            }
+
+            console.log("initializing, " + boundsDisplay(document.getElementById("chart_container").getBoundingClientRect()));
+            showNode(document.getElementById(id), true)
+            if (displayPopup) {
+                openOrgChartPopup();
+                //showNode(document.getElementById(id), false);
+            }
+            else {
+                setTimeout((id) => {
+                    document.getElementById("orgchart-container").style.display = "block";
+                }, 1500);
+            }
+        }, 500, storedSelection.currentId);
+
     }, 250);
 
 }, false);
 
-    async function drawChart() {
-        let fName = "https://cdn.jsdelivr.net/gh/ReuvenT/family_history/data/familytreedata.csv";
-        const response = await fetch(fName);
-        const data = await response.text();
+/**
+ * Initializes the Auth0 client
+ */
+const configureClient = async () => {
+    // const response = await fetchAuthConfig();
+    // const config = await response.json();
+  
+    auth0Client = await auth0.createAuth0Client({
+      domain: "dev-0wdjqy32gp3ia376.us.auth0.com", //config.domain,
+      clientId: "cBmTOThE35AZ8R5uEsmiVKDop9Jgax7p" //config.clientId
+    });
+    console.log("configureClient null?" + (auth0Client == null) );
+ };
 
-        if (response.status > 200) {
-            document.getElementById("err_msg").innerHTML = data;
-            //alert ("failed to load tree data from " + fName);
-        }
-
-        var renderedTable = prepChartTable(data, new google.visualization.DataTable())
-
-        // Create the chart.
-        chart = new google.visualization.OrgChart(document.getElementById('chart_container'));
-
-        google.visualization.events.addListener(chart, 'select', treeSelectHandler);
-
-        var drawOptions = { allowHtml: true, allowCollapse: true, tooltip: { isHtml: true } };
-
-        // Draw the chart, setting the allowHtml option to true for the tooltips.
-        chart.draw(renderedTable, drawOptions);
-        
-        var storedSelection = getChartViewState();
-        if (storedSelection.row >= 0 && storedSelection.isSelected ){
-            selectChartItem(storedSelection.row);
-            if (storedSelection.popUpShown ){
-                selectChartItem(storedSelection.row);
-                showNode(document.querySelector('[data-row="' + (storedSelection.row) + '"]'), false, true)
-            }
-        }
-
-        console.log('chart drawn');
-    }
 
 if (window.postMessage) {
     var tlMouseupFunc = function () {
@@ -108,19 +120,22 @@ if (window.postMessage) {
 }
 
 function redirectiFrames(timeframeUrl, orgChartElId) {
+    //captureAndSaveChartState();
     let timelineId = extractTimelineIdFromURL(timeframeUrl);
     redirectTimelineiFrame(timelineId);
-    if (document.getElementById(orgChartElId)) {
-        let currRow = document.getElementById(orgChartElId).getAttribute("data-row");
-        console.log('redirectiFrames orgChartElId: data-row: ' + orgChartElId + ": " + currRow);
-        selectChartItem(currRow);
-        let cState = getChartViewState();;
-        cState.row = currRow;
-        cState.isSelected = true;
-        cState.timelineId = timelineId;
-        setChartViewState(cState);
-        //captureAndSaveCurrentNodeState();
-        handleViewChoiceClick("view-timeline", true);
+    if (orgChartElId) {
+        let chartNodeEl = document.getElementById(orgChartElId);
+        if (chartNodeEl) {
+            console.log('redirectiFrames orgChartElId: ' + orgChartElId);
+            nodeClick(chartNodeEl, true);
+            let cState = getChartViewState();
+            cState.currentId = orgChartElId;
+            cState.isSelected = true;
+            cState.timelineId = timelineId;
+            setChartViewState(cState);
+            //captureAndSaveCurrentNodeState();
+            handleViewChoiceClick("view-timeline", true);
+        }
     }
 }
 
@@ -137,7 +152,7 @@ function extractTimelineIdFromURL(fullURL) {
 
 function redirectTimelineiFrame(newtimelineId) {
     // set timeline target
-    newtimelineId = timelineEmbedBasetimelineId + newtimelineId;
+    newtimelineId = baseiFrameSrc + newtimelineId;
     document.getElementById('tl-timeline-iframe').src = newtimelineId;
     handleViewChoiceClick("view-timeline", true);
 }
@@ -145,19 +160,18 @@ function redirectTimelineiFrame(newtimelineId) {
 function getChartViewState() {
     let cState = localStorage.getItem('chartViewState');
     if (cState != '[object Object]' && (typeof cState === 'string' || cState instanceof String)) {
-        cState.row = parseInt(cState.row)
         return JSON.parse(cState);
     }
     else {
         return {
-            "row": -1,
+            "currentId": null,
             "isSelected": false,
             "timelineId": null,
-            "top": "80px",
-            "left": "130px",
-            "width": "350px",
-            "height": "380px",
-            "popUpShown": false,
+            "top": 80,
+            "left": 130,
+            "width": 350,
+            "height": 380,
+            "showPopUp": false,
             "popupScale": 1,
             "fullScale": 1
         }
@@ -165,7 +179,6 @@ function getChartViewState() {
 }
 
 function setChartViewState(objChartViewState) {
-    objChartViewState.row = parseInt(objChartViewState.row)
     // safeguards:
     if (objChartViewState.left == undefined || objChartViewState.left < 1) {
         objChartViewState.left = 70;
@@ -179,6 +192,10 @@ function setChartViewState(objChartViewState) {
     if (objChartViewState.height == undefined || objChartViewState.height < 150 || objChartViewState.height > 800) {
         objChartViewState.height = 750;
     }
+    objChartViewState.left = parseInt(objChartViewState.left);
+    objChartViewState.top = parseInt(objChartViewState.top);
+    objChartViewState.width = parseInt(objChartViewState.width);
+    objChartViewState.height = parseInt(objChartViewState.height);
     localStorage.setItem('chartViewState', JSON.stringify(objChartViewState));
 }
 
@@ -188,8 +205,7 @@ function handleViewChoiceClick(viewChoice, setChecked) {
     let ocEle = document.getElementById("orgchart-container");
     let tpEle = document.getElementById("tree-popup");
     let pu = document.getElementById("tree-popup-btn");
-    console.log('handleViewChoiceClick to viewChoice: ' + viewChoice + ', setChecked: ' + setChecked)
-    //captureAndSaveCurrentNodeState();
+    //console.log('handleViewChoiceClick to viewChoice: ' + viewChoice + ', setChecked: ' + setChecked)
     if (viewChoice == "view-tree") {
         tlFrame.classList.remove("fullScreen");
         tlFrame.style.display = "none";
@@ -202,12 +218,9 @@ function handleViewChoiceClick(viewChoice, setChecked) {
             radiobtn = document.getElementById("view-tree");
             radiobtn.checked = true;
         }
-
-        // move chart back home if it was in the popup
-        //moveOrgChart(document.getElementById("tree_container"), true, 1)
     }
     else if (viewChoice == "view-timeline") {
-        //console.log('handleViewChoiceClick viewChoice: ' + viewChoice);
+        captureAndSaveChartState();
         ocEle.classList.remove("fullScreen");
         tlFrame.classList.add("fullScreen");
         tlFrame.style.display = "block";
@@ -217,15 +230,80 @@ function handleViewChoiceClick(viewChoice, setChecked) {
             radiobtn.checked = true;
         }
 
-        if (getChartViewState().popUpShown) {
+        if (getChartViewState().showPopUp) {
             openOrgChartPopup();
         }
-        console.log('handleViewChoiceClick viewChoice: ' + viewChoice);
     }
     // clear timeline menu if open
     let cbx = document.getElementById("tl-menu-cbx");
     if (cbx.checked) {
         cbx.checked = false;
     }
+}
 
+async function refreshLoginStatus() {
+    const query = window.location.search;
+    const shouldParseResult = query.includes("code=") && query.includes("state=");
+
+    if (shouldParseResult) {
+      console.log("> Parsing redirect");
+      try {
+        const result = await auth0Client.handleRedirectCallback();
+  
+        if (result.appState && result.appState.targetUrl) {
+          showContentFromUrl(result.appState.targetUrl);
+        }
+  
+        console.log("Logged in!");
+      } catch (err) {
+        console.log("Error parsing redirect:", err);
+      }
+  
+      window.history.replaceState({}, document.title, "/");
+    }
+    isAuthenticated = await auth0Client.isAuthenticated();
+    document.getElementById("login_label").innerHTML = isAuthenticated ? "Logout" : "Login";
+    document.getElementById("timeline_menus").innerHTML = isAuthenticated ? "-----Timeline Links------------" : "- Timeline Links available after login -";
+    console.log("refreshLoginStatus isAuthenticated: ", isAuthenticated);
+    return (isAuthenticated);
+}
+
+
+
+async function log_in_out () {
+    await refreshLoginStatus();
+    console.log("log_in_out isAuthenticated: " + isAuthenticated);
+    if (isAuthenticated){
+        try {
+            console.log("Logging out");
+            await auth0Client.logout({
+              logoutParams: {
+                returnTo: window.location.origin
+              }
+            });
+            await refreshLoginStatus();
+        } catch (err) {
+            console.log("Log out failed", err);
+          }
+    }
+    else{
+        try {
+            let targetUrl = "";
+            console.log("Logging in", targetUrl);
+        
+            const options = {
+              authorizationParams: {
+                redirect_uri: window.location.origin
+              }
+            };
+        
+            if (targetUrl) {
+              options.appState = { targetUrl };
+            }
+            await auth0Client.loginWithRedirect(options);
+        } catch (err) {
+            console.log("Log in failed", err);
+          }
+
+    }
 }
