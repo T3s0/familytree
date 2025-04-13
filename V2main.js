@@ -242,32 +242,45 @@ function handleViewChoiceClick(viewChoice, setChecked) {
 }
 
 async function refreshLoginStatus() {
-    const query = window.location.search;
-    const shouldParseResult = query.includes("code=") && query.includes("state=");
+  const query = window.location.search;
+  const shouldParseResult = query.includes("code=") && query.includes("state=");
 
-    if (shouldParseResult) {
-      console.log("> Parsing redirect");
-      try {
-        const result = await auth0Client.handleRedirectCallback();
-  
-        if (result.appState && result.appState.targetUrl) {
-          showContentFromUrl(result.appState.targetUrl);
-        }
-  
-        console.log("Logged in!");
-      } catch (err) {
-        console.log("Error parsing redirect:", err);
+  if (shouldParseResult) {
+    console.log("> Parsing redirect");
+    try {
+      const result = await auth0Client.handleRedirectCallback();
+
+      if (result.appState && result.appState.targetUrl) {
+        showContentFromUrl(result.appState.targetUrl);
       }
-  
-      window.history.replaceState({}, document.title, "/");
+      console.log("Logged in!");
+    } catch (err) {
+      console.log("Error parsing redirect:", err);
     }
-    isAuthenticated = await auth0Client.isAuthenticated();
-    document.getElementById("login_label").innerHTML = isAuthenticated ? "Logout" : "Login";
-    document.getElementById("timeline_menus").innerHTML = isAuthenticated ? "-----Timeline Links------------" : "- Timeline Links available after login -";
-    console.log("refreshLoginStatus isAuthenticated: ", isAuthenticated);
-    return (isAuthenticated);
-}
+    window.history.replaceState({}, document.title, "/");
+  }
+  isAuthenticated = await auth0Client.isAuthenticated();
+  // Update UI elements
+  document.getElementById("login_label").innerHTML = isAuthenticated ? "Logout" : "Login";
+  document.getElementById("timeline_menus").innerHTML = isAuthenticated
+    ? "-----Timeline Links------------"
+    : "- Timeline Links available after login -";
+  console.log("refreshLoginStatus isAuthenticated: ", isAuthenticated);
 
+  // **** Update our hidden flag element ****
+  document.getElementById("authFlag").setAttribute("data-authenticated", isAuthenticated ? "true" : "false");
+
+  // Optionally, also store it in localStorage for other parts of your app:
+  localStorage.setItem("isAuthenticated", isAuthenticated ? "true" : "false");
+
+  return isAuthenticated;
+}
+const authState = document.getElementById("authFlag").getAttribute("data-authenticated");
+if (authState === "true") {
+  // The user is logged in; proceed accordingly.
+} else {
+  // The user is not logged in; take alternate action.
+}
 
 
 async function log_in_out () {
