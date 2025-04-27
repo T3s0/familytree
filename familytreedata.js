@@ -10,9 +10,9 @@ const familyTreeSource = `# timelineId suffixes that link the timeline to the tr
 # Below are the data used to populate the tree struction
 # data columns: Id/Key_Name, parent Id, display content, tooltip, timeline id, panel hash (leave empty for first panel)
 ####### root (Louis)
-LOU_TRA,,Louis "Yuda Lieb" and Freida Trabin,tool tip,2138285/2648138406/,,{'menu': 'Trabin Family'; 'access': 'open'; 'seq': 1; 'level': 1}
+LOU_TRA,,Louis "Yuda Lieb" and Freida (Kurtzman) Trabin,tool tip,2138285/2648138406/,,{'menu': 'Trabin Family'; 'access': 'open'; 'seq': 1; 'level': 1}
 ####### Sam
-SAM_TRA,LOU_TRA,Shrul Sam "Israel" and Celia ?? Trabin,,2141912/5281753800/,,{'menu': 'Sam Trabin Family'; 'access': 'gated'; 'seq': 20; 'level': 2}
+SAM_TRA,LOU_TRA,Shrul Sam "Israel" and Celia (Feldman) Trabin,,2141912/5281753800/,,{'menu': 'Sam Trabin Family'; 'access': 'gated'; 'seq': 20; 'level': 2}
 NC1_TRA,SAM_TRA,No recorded children,,,
 ####### Ida and descendents
 IDA_TRA,LOU_TRA,Ida (Trabin) and Chaim Kilberg,,2141914/5281753800/,,{'menu': 'Ida (Trabin) Kilberg Family'; 'access': 'gated'; 'seq': 30; 'level': 2}
@@ -53,7 +53,7 @@ VIH_OSH,EVE_OSH,Vihaan Osheroff,,,
 SCO_OSH,FAT_TRA,Scott Osheroff,,,
 AND_TRA,EDW_TRA,Andrew "Andy" Jay Trabin,,,
 ####### Jacob and descendents
-JAC_TRA,LOU_TRA,Jankel "Jacob" and Sadie (Weiss),,2139216/5281753800/,,{'menu': 'Jacob Trabin Family'; 'access': 'open'; 'seq': 40; 'level': 2}
+JAC_TRA,LOU_TRA,Jankel "Jacob" and Sadie (Weiss) Trabin,,2139216/5281753800/,,{'menu': 'Jacob Trabin Family'; 'access': 'open'; 'seq': 40; 'level': 2}
 CAR_TRA,JAC_TRA,Carl and Laura (Schacter) Trabin,,2139607/5812857090/,,{'menu': 'Carl Trabin Family'; 'access': 'open'; 'seq': 41; 'level': 3}
 SAN_TRA,CAR_TRA,Sandi (Trabin) Advocat<b/><div style='font-style:italic; font-size:small; font-weight: 400;'> m/div: Steve Advocat,,2139607/5812857090/#vars!panel=19750573!
 ROB_ADV,SAN_TRA,Robin (Advocat) Mancol<b/><div style='font-style:italic; font-size:small; font-weight: 400;'> m: Matt Mancol,,,
@@ -78,12 +78,12 @@ DON_TRA,REU_TRA,Donna (Trabin) Avidan<b/><div style='font-style:italic; font-siz
 YAN_AVI,DON_TRA,Yanai Avidan,,,
 ELI_AVI,DON_TRA,Eliya Avidan,,,
 SYD_TRA,JAC_TRA,Sydney and Ruth (Zaresky) Trabin,,,
-JAY_TRA,SYD_TRA,Jay and Sherri (??) Trabin,,,
+JAY_TRA,SYD_TRA,Jay and Sherri (Steinberg) Trabin,,,
 DAN_TRA,JAY_TRA,Danielle Trabin,,,
 JOS_TRA,JAY_TRA,Josh Trabin,,,
 ERI_TRA,JAY_TRA,Eric Trabin,,,
-RON_TRA,SYD_TRA,Ron And Janice (??) Trabin,,,
-RNG_TRA,RON_TRA,Ron (?) Trabin,,,
+RON_TRA,SYD_TRA,Ron And Janice (Cole) Trabin,,,
+REB_TRA,RON_TRA,Rebecca Trabin,,,
 BEN_TRA,RON_TRA,Benjamin Trabin,,,
 HEL_TRA,JAC_TRA,Helene (Trabin) and Daniel Berne,,2141156/0328610175/,,{'menu': 'Helene (Trabin) Berne Family'; 'access': 'gated'; 'seq': 42; 'level': 3}
 DOU_BER,HEL_TRA,Doug and Cheryl Berne,,,
