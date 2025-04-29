@@ -1,13 +1,3 @@
-/* .imageContainer {
-  display:inline-block;
-  position: relative;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  background-color: #808080;
-  max-width: 100%;
-  overflow: hidden;
-} */
 
 body {
   background-color: lightgrey;
@@ -58,10 +48,9 @@ input {
 }
 
 .fullScreen {
-  width: 99%;
-  height: 99%;
+  width: 100%;
+  height: 95%;
   position: absolute;
-  top: 0;
   left: 0;
   z-index: 50;
   /* display: block; */
