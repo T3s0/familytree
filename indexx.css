@@ -269,7 +269,7 @@ input {
   /* You can also use relative/absolute here if you want to stay on the top */
   position: fixed;
   top: 47px;
-  left: 14px;
+  left: 20px;
   z-index: 1;
   color: black;
   -webkit-user-select: none;
