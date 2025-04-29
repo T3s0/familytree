@@ -268,7 +268,7 @@ input {
   display: block;
   /* You can also use relative/absolute here if you want to stay on the top */
   position: fixed;
-  top: 10px;
+  top: 47px;
   left: 14px;
   z-index: 1;
   color: black;
