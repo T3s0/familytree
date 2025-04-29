@@ -38,6 +38,13 @@ body {
   float: right;
 }
 
+.open-popup-btn {
+  background-image: url("data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGHaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+PHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj48dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPjwvcmRmOkRlc2NyaXB0aW9uPjwvcmRmOlJERj48L3g6eG1wbWV0YT4NCjw/eHBhY2tldCBlbmQ9J3cnPz4slJgLAAADtUlEQVRIS72WO0szXRCAn002MRJvG4OK4KUTFBRJJBErK2srtbC0tY2tIPhPFC3s30ZBwULFG4KIEDA28bKLMZrdTeLOW2j2M+stxfv5dDuXM+fMzJmzCiD8IgogIr8TU1EUfF7h/82PJ3Qch/39fa6urvjMTkTo6ekhmUyiKIpXXYWiKD8HLBaLDA8PMzAwQEtLi1eNbdtsbW1xcnKCpmledRWVDcl3FAoFSSQScnd351W5JJNJyWazXvEHAKmphoqioOs6FxcX7O7ucnt7y87ODqenp+i6/pqqH9JZoaaAFQKBAI7jYFkWqqpSLBYRkZqDVfCevIpCoSDxeFyur6+9KhERMU1TRkZGak7pj01TKpUYHR1F0zTC4TB+v59yuQyAqqpYlsXl5SX7+/s0Nzd73auoqUsdx+H8/JxsNouiKITDYZaWlggGgywsLJDL5ejo6KC/vx+f7/sK1RTwM1KpFKFQiMXFRa/qW2qaNMViEcuysG2bYrEIwPPzM5ZlAfDy8kK5XKZcLn86GLx8e8Ll5WX+/PlDMBh0O1FVVdLpNH6/n97eXreevG1uYmKCVCr1bpX/+DGlk5OTJBIJZmZm3N2LCKFQCBHBsix3I4qisLKywsHBARsbG56VXvlx0kxPT8vq6qpX/CUrKysyMzPjFbt8mDSlUol8Ps/9/T2WZZHP57m9vaVQKGAYBrZtvzd3fXK5HLZtc3d3x9PTE7Zt8/DwQKFQwHGcKvuqlJ6enjI7O0t7ezuqqpLJZAiHw0QiEUzTpK2tjfX1ddfZcRympqa4v7+nvr4ewzB4fn6mq6uLl5cXbm5uWFtbo6+v7zWYN6Wbm5sSj8fFMAwxDENM05R8Pi+6rsv29rYMDw9LuVx27W3blqGhIdne3hZd1+Xx8VFM0xRd18UwDInFYrKzs+Paf0ipz+ejsbERTdNoaWnB5/PR0NBAJBIhGo0SCoXemwNQX19PNBolEonQ2NhIIBAgEomgaRpNTU0f5uyX9zCdTrO7u0s2mwWoan8vlTqdn5+zt7eHruvw1tFevgwYDAbd16FWSqUSlmV9GqhCVUDHcfD7/QB0dXUxNjZGZ2cnAM3NzZ8uJCLu0B4cHGR8fJxoNApvQ8Lro77/qKur4/DwkLm5OXjrqoqDrutYllU1oH0+H6ZpMj8/T2trq/sQV7JydHT0oe5V1yKfz3N8fEwul6syAvD7/XR3dzMwMODKRISzszMymcynNdY0jVgsRjgchlpG27+mptfiX6Pwy7/6fwEeEgaMPjpu/AAAAABJRU5ErkJggg==");
+  height: 27px;  
+  width: 29px; 
+  margin-top: 0px;
+}
+
 label,
 legend {
   font:
@@ -60,14 +67,13 @@ input {
   /* display: block; */
 }
 
-.tl-span-id {
-  display: none;
-}
-
 .tl-link-btn {
   height: 24px;
-  background: url(https://cdn.jsdelivr.net/gh/ReuvenT/family_history@main/img/open_story.png) no-repeat center;
+  background: #d0cfd0;
+  border: none;
   display: block;
+  margin-bottom: 5px;
+  cursor: pointer;
   /* padding-bottom: 35px;
   margin-bottom: 30px; */
   /* text-align: center; */
@@ -76,29 +82,110 @@ input {
 #orgchart-container {
   display: none;
   /* border: 1px solid black;  */
-  background-color: white;
+  background-color: #4a4a4a;
   overflow-x: clip;
   overflow-y: clip;
   /* width: inherit;
   height: inherit; */
 }
 
-.oc-wid-node {
-  min-width: 92px;
-  font-size: large;
+/* Draw the lines */
+.orgChart .line {
+  height: 20px;
+  width: 4px;
+}
+
+.orgChart .selected {
+  background-color: 	#faf2a9 !important;
+}
+
+.orgChart .down {
+  background-color: 	#d0cfd0;
+  margin: 0px auto;
+  width: 4px;
+  height: 20px;
+}
+
+.orgChart .top {
+  border-top: 3px solid #d0cfd0;
+}
+
+.orgChart .left {
+  border-right: 2px solid #d0cfd0;
+}
+
+.orgChart .right {
+  border-left: 2px solid #d0cfd0;
+}
+
+/* node cell */
+.orgChart td {
+  text-align: center;
+  padding: 0;
+}
+
+.orgChart .oc-node {
+  /* background-color: rgb(85, 62, 62); */
+  background: #d0cfd0;
+  /* background: linear-gradient(to bottom, #d0cfd0 0%, #d0cfd0 100%); */
+  display: inline-block;
+  /* width: 100px; */
+  height: 100%;
+  min-height: 40px;
+  z-index: 10;
+  margin: 0 4px 0 4px;
+  color: black;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 3px 3px grey;
+  font: 1rem "Fira Sans", sans-serif;
+}
+
+.oc-node-cells {
+  text-align: center;
+  padding: 0;
+}
+
+.oc-node-container {
+  text-align: center;
+  vertical-align: top;
+  padding: 0;
+}
+
+.oc-node-level-0 {
+  width: 260px;
+  /* font-size: large; */
   /* text-align: center; */
 }
 
-.oc-med-node {
-  min-width: 75px;
-  font-size: large;
+.oc-node-level-1 {
+  width: 220px;
+  /* font-size: large; */
+  /* text-align: center; */
+}
+
+.oc-node-level-2 {
+  width: 180px;
+  /* font-size: large; */
   /* text-align: center; */
 }
 
 
-.oc-nar-node {
-  min-width: 66px;
-  font-size: larger;
+.oc-node-level-3 {
+  width: 120px;
+  /* font-size: larger;
+  vertical-align: text-bottom !important; */
+
+}
+
+.oc-node-level-4 {
+  width: 100px;
+  height: 80px;
+}
+
+.oc-node-level-5 {
+  width: 90px;
+  /* max-width: 90px; */
 }
 
 .tl-button {
@@ -125,7 +212,8 @@ input {
   z-index: 100;
   background-color: #f1f1f1;
   text-align: center;
-  /* border: 1px solid #d3d3d3; */
+  border-radius: 6px;
+  border: 1px solid #d3d3d3;
 }
 
 #tree-popup-header {
@@ -180,9 +268,8 @@ input {
   display: block;
   /* You can also use relative/absolute here if you want to stay on the top */
   position: fixed;
-  top: 13px;
+  top: 47px;
   left: 14px;
-
   z-index: 1;
   color: black;
   -webkit-user-select: none;
@@ -220,7 +307,7 @@ input {
   */
 .burger-slice {
   display: block;
-  width: 15px;
+  width: 21px;
   height: 3px;
   margin-bottom: 3px;
   position: relative;
@@ -244,13 +331,25 @@ span.tl-menu-prefix {
 }
 
 span.tl-menu-prefix:hover {
-  border-color: tomato;
+  font-weight: bold;
+  /* border-color: tomato; */
 }
 
-#tl-menu-toggle a:hover {
-  color: tomato;
+.tl-menu-toggle a:hover {
+  font-weight: bold;
+  /* color: tomato; */
 }
 
+#tl-menu-bar *{
+  color: rgb(128, 128, 128);
+  font: .9rem 'Fira Sans', sans-serif;
+  text-decoration: none; 
+  background-color: #000000;
+}
+
+.tl-menu-item:hover {
+  font-weight: bold !important;
+}
 
 span.tl-menu-1 {
   width: 15px;
@@ -294,6 +393,37 @@ span.tl-menu-3 {
   background: #232323;
 }
 
+#tl-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#tl-menu li {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 1rem;
+  border-bottom: 1px solid #ccc; /* optional: for divider between items */
+}
+
+#tl-menu li label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+#tl-menu li a {
+  text-decoration: none;
+  color: black;
+  width: 100%;
+}
+
+
 #tl-menu-toggle input:checked~.burger-slice:nth-last-child(3) {
   opacity: 0;
   transform: rotate(0deg) scale(0.2, 0.2);
@@ -318,6 +448,7 @@ span.tl-menu-3 {
   border-radius: 3px;
   -webkit-font-smoothing: antialiased;
   padding-left: 20px;
+  background-color: #bfbfbf;
 
   /* to stop flickering of text in safari */
 
