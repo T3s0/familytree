@@ -336,7 +336,8 @@ console.log("Logging in", targetUrl);
 
 const options = {
     authorizationParams: {
-        redirect_uri: window.location.origin  // This should match what's registered in your Auth0 app settings
+        redirect_uri: "https://timeline-fda0a6.webflow.io/view-histories"
+  // This should match what's registered in your Auth0 app settings
     },
     appState: { targetUrl }  // Always send targetUrl in appState
 };
