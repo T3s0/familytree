@@ -331,12 +331,12 @@ async function log_in_out() {
     }
     else {
         try {
-            let targetUrl = "https://timeline-fda0a6.webflow.io/view-histories"; // <--testing for redirect to app
+            let targetUrl = "https://www.trabinextendedfamilyhistory.org/view-histories"; // <--testing for redirect to app
 console.log("Logging in", targetUrl);
 
 const options = {
     authorizationParams: {
-        redirect_uri: "https://timeline-fda0a6.webflow.io/view-histories"
+        redirect_uri: "https://www.trabinextendedfamilyhistory.org/view-histories"
   // This should match what's registered in your Auth0 app settings
     },
     appState: { targetUrl }  // Always send targetUrl in appState
