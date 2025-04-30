@@ -421,7 +421,7 @@ span.tl-menu-3 {
   margin: 0;
   display: flex;
   flex-direction: column;       /* Stack items vertically */
-  align-items: flex-end;        /* Align items to the right */
+  align-items: flex-start;        /* Align items to the right */
 }
 
 #tl-menu li {
