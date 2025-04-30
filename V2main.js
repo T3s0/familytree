@@ -282,7 +282,9 @@ async function refreshLoginStatus() {
             const result = await auth0Client.handleRedirectCallback();
 
             if (result.appState && result.appState.targetUrl) {
-                showContentFromUrl(result.appState.targetUrl);
+                // Perform actual redirection
+                window.location.href = result.appState.targetUrl;
+                return; // Stop further execution
             }
 
             console.log("Logged in!");
@@ -329,7 +331,7 @@ async function log_in_out() {
     }
     else {
         try {
-            let targetUrl = "https://timeline-fda0a6.webflow.io/view-histories";
+            let targetUrl = "https://timeline-fda0a6.webflow.io/view-histories"; // <--testing for redirect to app
 console.log("Logging in", targetUrl);
 
 const options = {
