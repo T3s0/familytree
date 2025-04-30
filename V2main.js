@@ -7,7 +7,7 @@ let isAuthenticated = false;
 window.onload = async () => {
     await configureClient();
     await refreshLoginStatus();
-    
+
     let chartNodes = prepChartTable(familyTreeSource, isAuthenticated)
     //let itemCount = (JSON.stringify(chartNodes).match(/\"id\":/g) || []).length;
     //let leafCount = (JSON.stringify(chartNodes).match(/isLeaf\":true/g) || []).length; // (JSON.stringify(result).match(/isLeaf\":true /g) || []).length;;
@@ -65,25 +65,47 @@ document.addEventListener('DOMContentLoaded', function () {
         redirectiFrames(baseiFrameSrc + storedSelection.timelineId, storedSelection.timelineId);
 
         // restore popup if needed
-        setTimeout((id) => {
+        setTimeout((id, isSelected) => {
             if (!isAuthenticated && storedSelection.timelineId != rootTimeline) {
                 storedSelection.timelineId = rootTimeline;
                 setChartViewState(storedSelection);
                 redirectiFrames(baseiFrameSrc + storedSelection.timelineId, storedSelection.timelineId);
             }
 
+            document.getElementById("tl-menu-bar").style.visibility = 'visible';
+            document.getElementById("tl-select-view").style.visibility = 'visible';
             console.log("initializing, " + boundsDisplay(document.getElementById("chart_container").getBoundingClientRect()));
-            showNode(document.getElementById(id), true)
+            //showNode(document.getElementById(id), true)
             if (displayPopup) {
                 openOrgChartPopup();
-                //showNode(document.getElementById(id), false);
+                if (isSelected) {
+                    nodeIdSetSelected(id);
+                    showNode(document.getElementById(id), false);
+                }
+                else {
+                    if (!id) {
+                        id = "LOU_TRA";
+                    }
+                    showNode(document.getElementById(id), true);
+                }
             }
             else {
-                setTimeout((id) => {
+                setTimeout((id, isSelected) => {
                     document.getElementById("orgchart-container").style.display = "block";
-                }, 1500);
+                    if (isSelected) {
+                        nodeIdSetSelected(id);
+                        showNode(document.getElementById(id), true);
+                    }
+                    else {
+                        if (!id) {
+                            id = "LOU_TRA";
+                        }
+                        showNode(document.getElementById(id), true);
+                    }
+                }, 1500, id, isSelected);
             }
-        }, 500, storedSelection.currentId);
+
+        }, 500, storedSelection.currentId, storedSelection.isSelected);
 
     }, 250);
 
@@ -93,15 +115,23 @@ document.addEventListener('DOMContentLoaded', function () {
  * Initializes the Auth0 client
  */
 const configureClient = async () => {
+    let auth0State = localStorage.getItem('auth0flag');
+    if (auth0State == null) {
+        console.log("configureClient (auth0) bypassed");
+        document.getElementById("login_label").style.visibility = 'hidden';
+        isAuthenticated = true;
+        return;
+    }
+    console.log("configureClient (auth0) start");
     // const response = await fetchAuthConfig();
     // const config = await response.json();
-  
+
     auth0Client = await auth0.createAuth0Client({
-      domain: "dev-0wdjqy32gp3ia376.us.auth0.com", //config.domain,
-      clientId: "cBmTOThE35AZ8R5uEsmiVKDop9Jgax7p" //config.clientId
+        domain: "dev-0wdjqy32gp3ia376.us.auth0.com", //config.domain,
+        clientId: "cBmTOThE35AZ8R5uEsmiVKDop9Jgax7p" //config.clientId
     });
-    console.log("configureClient null?" + (auth0Client == null) );
- };
+    console.log("configureClient null?" + (auth0Client == null));
+};
 
 
 if (window.postMessage) {
@@ -211,6 +241,7 @@ function handleViewChoiceClick(viewChoice, setChecked) {
         tlFrame.style.display = "none";
         moveOrgChart(true)
         ocEle.style.display = "block"; //orgchart-container
+        ocEle.style.removeProperty('height');
         ocEle.classList.add("fullScreen");
         pu.style.display = "none";
         tpEle.style.display = "none";
@@ -242,81 +273,99 @@ function handleViewChoiceClick(viewChoice, setChecked) {
 }
 
 async function refreshLoginStatus() {
-  const query = window.location.search;
-  const shouldParseResult = query.includes("code=") && query.includes("state=");
+    const query = window.location.search;
+    const shouldParseResult = query.includes("code=") && query.includes("state=");
 
-  if (shouldParseResult) {
-    console.log("> Parsing redirect");
-    try {
-      const result = await auth0Client.handleRedirectCallback();
+    if (shouldParseResult) {
+        console.log("> Parsing redirect");
+        try {
+            const result = await auth0Client.handleRedirectCallback();
 
-      if (result.appState && result.appState.targetUrl) {
-        showContentFromUrl(result.appState.targetUrl);
-      }
-      console.log("Logged in!");
-    } catch (err) {
-      console.log("Error parsing redirect:", err);
+            if (result.appState && result.appState.targetUrl) {
+                showContentFromUrl(result.appState.targetUrl);
+            }
+
+            console.log("Logged in!");
+        } catch (err) {
+            console.log("Error parsing redirect:", err);
+        }
+
+        window.history.replaceState({}, document.title, "/");
     }
-    window.history.replaceState({}, document.title, "/");
-  }
-  isAuthenticated = await auth0Client.isAuthenticated();
-  // Update UI elements
-  document.getElementById("login_label").innerHTML = isAuthenticated ? "Logout" : "Login";
-  document.getElementById("timeline_menus").innerHTML = isAuthenticated
-    ? "-----Timeline Links------------"
-    : "- Timeline Links available after login -";
-  console.log("refreshLoginStatus isAuthenticated: ", isAuthenticated);
-
-  // **** Update our hidden flag element ****
-  document.getElementById("authFlag").setAttribute("data-authenticated", isAuthenticated ? "true" : "false");
-
-  // Optionally, also store it in localStorage for other parts of your app:
-  localStorage.setItem("isAuthenticated", isAuthenticated ? "true" : "false");
-
-  return isAuthenticated;
-}
-const authState = document.getElementById("authFlag").getAttribute("data-authenticated");
-if (authState === "true") {
-  // The user is logged in; proceed accordingly.
-} else {
-  // The user is not logged in; take alternate action.
+    let auth0State = localStorage.getItem('auth0flag');
+    if (auth0State == null) {
+        isAuthenticated = true;
+    }
+    else{
+        isAuthenticated = await auth0Client.isAuthenticated();
+    }
+    document.getElementById("login_label").innerHTML = isAuthenticated ? "LOGOUT" : "LOGIN";
+    document.getElementById("timeline_menus").innerHTML = isAuthenticated ? "-----Timeline Links------------" : "- Timeline Links available after login -";
+    console.log("refreshLoginStatus isAuthenticated: ", isAuthenticated);
+    return (isAuthenticated);
 }
 
-
-async function log_in_out () {
+async function log_in_out() {
+    let auth0State = localStorage.getItem('auth0flag');
+    if (auth0State == null) {
+        return;
+    }
     await refreshLoginStatus();
     console.log("log_in_out isAuthenticated: " + isAuthenticated);
-    if (isAuthenticated){
+    if (isAuthenticated) {
         try {
-            console.log("Logging out");
-            await auth0Client.logout({
-              logoutParams: {
-                returnTo: window.location.origin
-              }
-            });
+            if (confirm("Are you sure you want to logout?")) {
+                console.log("Logging out");
+                await auth0Client.logout({
+                    logoutParams: {
+                        returnTo: window.location.origin
+                    }
+                });
+            }
             await refreshLoginStatus();
         } catch (err) {
             console.log("Log out failed", err);
-          }
+        }
     }
-    else{
+    else {
         try {
-            let targetUrl = "https://timeline-fda0a6.webflow.io/webapp-timelines-copy";
+            let targetUrl = "";
             console.log("Logging in", targetUrl);
-        
+
             const options = {
-              authorizationParams: {
-                redirect_uri: window.location.origin
-              }
+                authorizationParams: {
+                    redirect_uri: window.location.origin
+                }
             };
-        
+
             if (targetUrl) {
-              options.appState = { targetUrl };
+                options.appState = { targetUrl };
             }
             await auth0Client.loginWithRedirect(options);
         } catch (err) {
             console.log("Log in failed", err);
-          }
+        }
 
     }
+}
+
+function print_tl() {
+    let timelineId = getChartViewState().timelineId;
+    // https://www.tiki-toki.com/timeline/entry/2141156/Helene-Trabin-Berne-Family/print/
+    console.log('pdf btn clicked for timeline \n' + timelineId + ", " + JSON.stringify(getMenuObj(timelineId)));
+    let printLink = baseiFrameSrc.replace('embed', 'entry') + getMenuObj(timelineId).tikiPath + "/print/"
+
+    //alert("pdf btn clicked for timeline "  + printLink);
+
+
+    prompt(`This manual step allows you to open a browser page with the 
+content of this timeline in a printable format. It will only show the 
+default media image, and may be limited in other ways. 
+
+To use this, copy the link below and paste it into the address bar of 
+a new browser window. If the print dialog box doesn't display in 
+the new tab, use the browser print command, e.g. Ctrl+P. 
+ (The Ok button below doesn't do anything). ` , printLink);
+
+    return;
 }
