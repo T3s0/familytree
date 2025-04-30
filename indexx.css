@@ -420,20 +420,20 @@ span.tl-menu-3 {
   padding: 0;
   margin: 0;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px; /* optional spacing between menu items */
+  flex-direction: column;       /* Stack items vertically */
+  align-items: flex-end;        /* Align items to the right */
 }
 
 #tl-menu li {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   font-family: 'Fira Sans', sans-serif;
   font-size: 1rem;
-  text-transform: none; /* ensures camelCase / no forced uppercase */
-  padding: 0; /* remove excessive spacing */
+  text-transform: none;         /* Preserve camelCase */
+  padding: 4px 8px;             /* Minimal padding */
   margin: 0;
-  border: none; /* removes bottom border */
+  border: none;                 /* No bottom border */
 }
 
 #tl-menu li label {
@@ -452,6 +452,7 @@ span.tl-menu-3 {
   margin: 0;
   text-transform: none;
 }
+
 
 
 
