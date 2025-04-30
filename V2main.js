@@ -329,19 +329,18 @@ async function log_in_out() {
     }
     else {
         try {
-            let targetUrl = "";
-            console.log("Logging in", targetUrl);
+            let targetUrl = "https://timeline-fda0a6.webflow.io/view-histories";
+console.log("Logging in", targetUrl);
 
-            const options = {
-                authorizationParams: {
-                    redirect_uri: window.location.origin
-                }
-            };
+const options = {
+    authorizationParams: {
+        redirect_uri: window.location.origin  // This should match what's registered in your Auth0 app settings
+    },
+    appState: { targetUrl }  // Always send targetUrl in appState
+};
 
-            if (targetUrl) {
-                options.appState = { targetUrl };
-            }
-            await auth0Client.loginWithRedirect(options);
+await auth0Client.loginWithRedirect(options);
+
         } catch (err) {
             console.log("Log in failed", err);
         }
