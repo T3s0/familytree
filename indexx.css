@@ -366,6 +366,25 @@ span.tl-menu-3 {
   border-color: black;
 }
 
+span.tl-menu-4 {
+  width: 15px;
+  margin-left: 45px;
+  display: inline-block;
+  background: #BBD15F;
+  color: #BBD15F;
+  border-style: solid;
+  border-color: black;
+}
+
+span.tl-menu-5 {
+  width: 15px;
+  margin-left: 60px;
+  display: inline-block;
+  background: #FFA500;
+  color: #FFA500;
+  border-style: solid;
+  border-color: black;
+}
 
 #tl-menu-toggle .burger-slice:first-child {
   transform-origin: 0% 0%;
