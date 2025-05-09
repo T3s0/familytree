@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 1500, id, isSelected, showPopUp);
             }
 
-        }, 500, storedSelection.currentId, storedSelection.isSelected, storedSelection.timelineId, storedSelection.showPopUp);
+         }, 500, storedSelection.currentId, storedSelection.isSelected, storedSelection.timelineId, storedSelection.showPopUp);
         let contHeight = document.getElementById("tl-timeline-iframe").getBoundingClientRect().height- 160; 
         let menuHeight = document.getElementById("tl-menu").getBoundingClientRect().height; 
         if (menuHeight > contHeight){
