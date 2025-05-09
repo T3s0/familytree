@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectedTimeline = decodeURI(urlParams.get('newtimeline'));
-        var storedSelection = getChartViewState();
+        const storedSelection = getChartViewState();
         if (redirectedTimeline && redirectedTimeline != "null") {
             urlParams.delete("redirectedTimeline");
             console.log('redirectedTimeline: ' + decodeURI(redirectedTimeline));
@@ -49,11 +49,11 @@ document.addEventListener('DOMContentLoaded', function () {
         redirectiFrames(baseiFrameSrc + storedSelection.timelineId, storedSelection.timelineId);
 
         // restore popup if needed
-        setTimeout((id, isSelected) => {
-            if (!isAuthenticated && storedSelection.timelineId != rootTimeline) {
+         setTimeout((id, isSelected, timelineId, showPopUp) => {
+            if (!isAuthenticated && timelineId != rootTimeline) {
                 storedSelection.timelineId = rootTimeline;
                 setChartViewState(storedSelection);
-                redirectiFrames(baseiFrameSrc + storedSelection.timelineId, storedSelection.timelineId);
+                redirectiFrames(baseiFrameSrc + timelineId, timelineId);
             }
 
            document.getElementById("tl-menu-bar").style.visibility = 'visible';
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 1500, id, isSelected, showPopUp);
             }
 
-        }, 500, storedSelection.currentId, storedSelection.isSelected, storedSelection.showPopUp);
+        }, 500, storedSelection.currentId, storedSelection.isSelected, storedSelection.timelineId, storedSelection.showPopUp);
         let contHeight = document.getElementById("tl-timeline-iframe").getBoundingClientRect().height- 160; 
         let menuHeight = document.getElementById("tl-menu").getBoundingClientRect().height; 
         if (menuHeight > contHeight){
