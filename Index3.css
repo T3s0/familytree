@@ -1,0 +1,490 @@
+body {
+  background-color: lightgrey;
+  /* overflow:hidden; */
+  min-height: 100%
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#tree-popup-btn {
+  margin-bottom: -3px;
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+
+}
+
+.close-popup-btn {
+  font: 1.5rem 'Fira Sans', sans-serif;
+  border: 0 none transparent;
+  background: none;
+  color: rgb(20, 17, 17);
+  min-width: 30px; 
+  float: right;
+}
+
+.open-popup-btn {
+  background-image: url("data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGHaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+PHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj48dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPjwvcmRmOkRlc2NyaXB0aW9uPjwvcmRmOlJERj48L3g6eG1wbWV0YT4NCjw/eHBhY2tldCBlbmQ9J3cnPz4slJgLAAADtUlEQVRIS72WO0szXRCAn002MRJvG4OK4KUTFBRJJBErK2srtbC0tY2tIPhPFC3s30ZBwULFG4KIEDA28bKLMZrdTeLOW2j2M+stxfv5dDuXM+fMzJmzCiD8IgogIr8TU1EUfF7h/82PJ3Qch/39fa6urvjMTkTo6ekhmUyiKIpXXYWiKD8HLBaLDA8PMzAwQEtLi1eNbdtsbW1xcnKCpmledRWVDcl3FAoFSSQScnd351W5JJNJyWazXvEHAKmphoqioOs6FxcX7O7ucnt7y87ODqenp+i6/pqqH9JZoaaAFQKBAI7jYFkWqqpSLBYRkZqDVfCevIpCoSDxeFyur6+9KhERMU1TRkZGak7pj01TKpUYHR1F0zTC4TB+v59yuQyAqqpYlsXl5SX7+/s0Nzd73auoqUsdx+H8/JxsNouiKITDYZaWlggGgywsLJDL5ejo6KC/vx+f7/sK1RTwM1KpFKFQiMXFRa/qW2qaNMViEcuysG2bYrEIwPPzM5ZlAfDy8kK5XKZcLn86GLx8e8Ll5WX+/PlDMBh0O1FVVdLpNH6/n97eXreevG1uYmKCVCr1bpX/+DGlk5OTJBIJZmZm3N2LCKFQCBHBsix3I4qisLKywsHBARsbG56VXvlx0kxPT8vq6qpX/CUrKysyMzPjFbt8mDSlUol8Ps/9/T2WZZHP57m9vaVQKGAYBrZtvzd3fXK5HLZtc3d3x9PTE7Zt8/DwQKFQwHGcKvuqlJ6enjI7O0t7ezuqqpLJZAiHw0QiEUzTpK2tjfX1ddfZcRympqa4v7+nvr4ewzB4fn6mq6uLl5cXbm5uWFtbo6+v7zWYN6Wbm5sSj8fFMAwxDENM05R8Pi+6rsv29rYMDw9LuVx27W3blqGhIdne3hZd1+Xx8VFM0xRd18UwDInFYrKzs+Paf0ipz+ejsbERTdNoaWnB5/PR0NBAJBIhGo0SCoXemwNQX19PNBolEonQ2NhIIBAgEomgaRpNTU0f5uyX9zCdTrO7u0s2mwWoan8vlTqdn5+zt7eHruvw1tFevgwYDAbd16FWSqUSlmV9GqhCVUDHcfD7/QB0dXUxNjZGZ2cnAM3NzZ8uJCLu0B4cHGR8fJxoNApvQ8Lro77/qKur4/DwkLm5OXjrqoqDrutYllU1oH0+H6ZpMj8/T2trq/sQV7JydHT0oe5V1yKfz3N8fEwul6syAvD7/XR3dzMwMODKRISzszMymcynNdY0jVgsRjgchlpG27+mptfiX6Pwy7/6fwEeEgaMPjpu/AAAAABJRU5ErkJggg==");
+  height: 27px;  
+  width: 29px; 
+  margin-top: 0px;
+}
+
+label,
+legend {
+  font:
+    1rem "Fira Sans",
+    sans-serif;
+  color: rgb(20, 17, 17);
+}
+
+input {
+  margin: 0.4rem;
+}
+
+.fullScreen {
+  width: 100%;
+  height: 95%;
+  position: absolute;
+  left: 0;
+  z-index: 50;
+  /* display: block; */
+}
+
+.tl-link-btn {
+  height: 24px;
+  background: #d0cfd0;
+  border: none;
+  display: block;
+  margin-bottom: 5px;
+  cursor: pointer;
+  /* padding-bottom: 35px;
+  margin-bottom: 30px; */
+  /* text-align: center; */
+}
+
+#orgchart-container {
+  display: none;
+  /* border: 1px solid black;  */
+  background-color: #4a4a4a;
+  overflow-x: clip;
+  overflow-y: clip;
+  /* width: inherit;
+  height: inherit; */
+}
+
+/* Draw the lines */
+.orgChart .line {
+  height: 20px;
+  width: 4px;
+}
+
+.orgChart .selected {
+  background-color: 	#faf2a9 !important;
+}
+
+.orgChart .down {
+  background-color: 	#d0cfd0;
+  margin: 0px auto;
+  width: 4px;
+  height: 20px;
+}
+
+.orgChart .top {
+  border-top: 3px solid #d0cfd0;
+}
+
+.orgChart .left {
+  border-right: 2px solid #d0cfd0;
+}
+
+.orgChart .right {
+  border-left: 2px solid #d0cfd0;
+}
+
+/* node cell */
+.orgChart td {
+  text-align: center;
+  padding: 0;
+}
+
+.orgChart .oc-node {
+  /* background-color: rgb(85, 62, 62); */
+  background: #d0cfd0;
+  /* background: linear-gradient(to bottom, #d0cfd0 0%, #d0cfd0 100%); */
+  display: inline-block;
+  /* width: 100px; */
+  height: 100%;
+  min-height: 50px;
+  z-index: 10;
+  margin: 0 4px 0 4px;
+  color: black;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 3px 3px grey;
+  font: 1rem "Fira Sans", sans-serif;
+}
+
+.oc-node-cells {
+  text-align: center;
+  padding: 0;
+}
+
+.oc-node-container {
+  text-align: center;
+  vertical-align: top;
+  padding: 0;
+}
+
+.oc-node-level-0 {
+  width: 260px;
+  /* font-size: large; */
+  /* text-align: center; */
+}
+
+.oc-node-level-1 {
+  width: 220px;
+  /* font-size: large; */
+  /* text-align: center; */
+}
+
+.oc-node-level-2 {
+  width: 180px;
+  /* font-size: large; */
+  /* text-align: center; */
+}
+
+
+.oc-node-level-3 {
+  width: 120px;
+  /* font-size: larger;
+  vertical-align: text-bottom !important; */
+
+}
+
+.oc-node-level-4 {
+  width: 100px;
+  height: 80px;
+}
+
+.oc-node-level-5 {
+  width: 90px;
+  /* max-width: 90px; */
+}
+
+.tl-button {
+  height: 30px;
+  width: 40px;
+}
+
+.tl-button img {
+  width: 42px;
+  height: 30px;
+}
+
+.hide-popup {
+  display: none;
+}
+
+#tree-popup {
+  position: absolute;
+  top: 400px;
+  min-width: 150px;
+  /* width: 480px;
+  height: 550px; 
+  box-sizing: border-box;*/
+  z-index: 100;
+  background-color: #f1f1f1;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid #d3d3d3;
+}
+
+#tree-popup-header {
+  padding: 6px;
+  /* margin-bottom: 4px; */
+  max-height: 60px;
+  cursor: move;
+  z-index: 10;
+  background-color: #65bee7;
+  /* color: darkblue; */
+  font:
+    1rem "Fira Sans",
+    sans-serif;
+  color: rgb(20, 17, 17);
+}
+
+.resizable {
+  position: relative;
+  overflow: hidden;
+}
+
+/* triangle to move popup */
+.resizer {
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-left: 20px solid #65bee7;
+  border-bottom: 20px solid transparent;
+  position: absolute;
+  right: -3px;
+  bottom: -13px;
+  cursor: se-resize;
+  transform: rotate(45deg);
+}
+
+/*
+ * Made by Erik Terwan
+ * 24th of November 2015
+ * MIT License
+ *
+ *
+ * If you are thinking of using this in
+ * production code, beware of the browser
+ * prefixes.
+ */
+
+
+
+/* Menu code starts here */
+
+#tl-menu-toggle {
+  display: block;
+  /* You can also use relative/absolute here if you want to stay on the top */
+  position: fixed;
+  top: 47px;
+  left: 14px;
+  z-index: 1;
+  color: black;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#tl-menu-toggle a {
+  text-decoration: none;
+  color: #232323;
+  font: 1rem "Fira Sans", sans-serif;
+  transition: color 0.3s ease;
+}
+
+
+#tl-menu-toggle input {
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+
+  cursor: pointer;
+
+  opacity: 0;
+  /* hide this */
+  z-index: 2;
+  /* and place it over the hamburger */
+
+  -webkit-touch-callout: none;
+}
+
+/*
+  * Just a quick hamburger
+  */
+.burger-slice {
+  display: block;
+  width: 21px;
+  height: 3px;
+  margin-bottom: 3px;
+  position: relative;
+  background: black;
+  border-radius: 1px;
+  z-index: 1;
+  transform-origin: 4px 0px;
+
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+    opacity 0.55s ease;
+}
+
+span.tl-menu-prefix {
+  display: inline-block;
+  margin: 0 8px -2px 0;
+  border-style: solid;
+  border-color: black;
+  overflow: hidden;
+  border-width: thin;
+}
+
+span.tl-menu-prefix:hover {
+  font-weight: bold;
+  /* border-color: tomato; */
+}
+
+.tl-menu-toggle a:hover {
+  font-weight: bold;
+  /* color: tomato; */
+}
+
+#tl-menu-bar *{
+  color: rgb(128, 128, 128);
+  font: .9rem 'Fira Sans', sans-serif;
+  text-decoration: none; 
+  background-color: #000000;
+}
+
+.tl-menu-item:hover {
+  font-weight: bold !important;
+}
+
+span.tl-menu-1 {
+  width: 15px;
+  background: #008B8B;
+  color: #008B8B;
+  opacity: 50%;
+  border-width: 2px;
+}
+
+span.tl-menu-2 {
+  width: 15px;
+  margin-left: 15px;
+  background: #3EA27D;
+  color: #3EA27D;
+  opacity: 80%;
+}
+
+span.tl-menu-3 {
+  width: 15px;
+  margin-left: 30px;
+  display: inline-block;
+  background: #7CBA6F;
+  color: #7CBA6F;
+  border-style: solid;
+  border-color: black;
+}
+span.tl-menu-4 {
+  width: 15px;
+  margin-left: 45px;
+  display: inline-block;
+  background: #BBD15F;
+  color: #BBD15F;
+  border-style: solid;
+  border-color: black;
+}
+
+span.tl-menu-5 {
+  width: 15px;
+  margin-left: 60px;
+  display: inline-block;
+  background: #FFA500;
+  color: #FFA500;
+  border-style: solid;
+  border-color: black;
+}
+
+#tl-menu-toggle .burger-slice:first-child {
+  transform-origin: 0% 0%;
+}
+
+#tl-menu-toggle .burger-slice:nth-last-child(2) {
+  transform-origin: 0% 100%;
+}
+
+#tl-menu-toggle input:checked~.burger-slice {
+  opacity: 1;
+  transform: rotate(45deg) translate(0, -2%);
+  background: #232323;
+}
+
+#tl-menu-toggle input:checked~.burger-slice:nth-last-child(3) {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+#tl-menu-toggle input:checked~.burger-slice:nth-last-child(2) {
+  transform: rotate(-45deg) translate(0, 1%);
+}
+
+#tl-menu {
+  position: absolute;
+  max-width: 300px;
+  width: 100vw;
+  max-height: 100vh;
+  margin: 60px 0 0 -6px;
+  /* padding-left: 50px; */
+  padding-top: 5px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: rgb(212, 210, 210);
+  list-style-type: none;
+  border-radius: 3px;
+  -webkit-font-smoothing: antialiased;
+  padding-left: 20px;
+  background-color: #bfbfbf;
+
+  /* to stop flickering of text in safari */
+
+  transform-origin: 0% 0%;
+  transform: translate(-120%, 0);
+
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0);
+}
+
+#tl-menu li {
+  padding: 5px 0;
+  font-size: 12px;
+}
+
+#tl-menu li label {
+  cursor: pointer;
+}
+
+
+/*adition for drop down*/ 
+#tl-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;       /* Stack items vertically */
+  align-items: flex-start;        /* Align items to the right */
+}
+
+#tl-menu li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 1rem;
+  text-transform: none;         /* Preserve camelCase */
+  padding: 4px 8px;             /* Minimal padding */
+  margin: 0;
+  border: none;                 /* No bottom border */
+}
+
+#tl-menu li label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-transform: none;
+}
+
+#tl-menu li a {
+  text-decoration: none;
+  color: black;
+  padding: 0;
+  margin: 0;
+  text-transform: none;
+}
+
+
+/*
+  * And let's slide it in from the left
+  */
+#tl-menu-toggle input:checked~ul {
+  transform: none;
+}
