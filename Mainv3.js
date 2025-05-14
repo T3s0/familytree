@@ -279,7 +279,6 @@ async function refreshLoginStatus() {
 
 
 async function log_in_out() {
-    let auth0State = localStorage.getItem('auth0flag');
     if (auth0State == null) {
         return;
     }
