@@ -302,7 +302,7 @@ async function log_in_out() {
 
             const options = {
                 authorizationParams: {
-                    redirect_uri: window.location.origin
+                    redirect_uri:   redirect_uri: "https://www.trabinextendedfamilyhistory.org/view-histories"
                 }
             };
 
