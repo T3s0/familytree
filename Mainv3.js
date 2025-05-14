@@ -157,7 +157,6 @@ function redirectTimelineiFrame(newtimelineId) {
 }
 
 function getChartViewState() {
-    let cState = localStorage.getItem('chartViewState');
     if (cState != '[object Object]' && (typeof cState === 'string' || cState instanceof String)) {
         let val = JSON.parse(cState);
         if (val.timelineId/length < 10){
@@ -201,7 +200,7 @@ function setChartViewState(objChartViewState) {
     objChartViewState.top = parseInt(objChartViewState.top);
     objChartViewState.width = parseInt(objChartViewState.width);
     objChartViewState.height = parseInt(objChartViewState.height);
-    localStorage.setItem('chartViewState', JSON.stringify(objChartViewState));
+  
 }
 
 
