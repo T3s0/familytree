@@ -157,6 +157,7 @@ function redirectTimelineiFrame(newtimelineId) {
 }
 
 function getChartViewState() {
+    let cState = localStorage.getItem('chartViewState');
     if (cState != '[object Object]' && (typeof cState === 'string' || cState instanceof String)) {
         let val = JSON.parse(cState);
         if (val.timelineId/length < 10){
@@ -200,7 +201,7 @@ function setChartViewState(objChartViewState) {
     objChartViewState.top = parseInt(objChartViewState.top);
     objChartViewState.width = parseInt(objChartViewState.width);
     objChartViewState.height = parseInt(objChartViewState.height);
-  
+    localStorage.setItem('chartViewState', JSON.stringify(objChartViewState));
 }
 
 
@@ -249,40 +250,11 @@ function handleViewChoiceClick(viewChoice, setChecked) {
     }
 }
 
-async function refreshLoginStatus() {
-    const query = window.location.search;
-    const shouldParseResult = query.includes("code=") && query.includes("state=");
-
-    if (shouldParseResult) {
-        console.log("> Parsing redirect");
-        try {
-            const result = await auth0Client.handleRedirectCallback();
-
-            if (result.appState && result.appState.targetUrl) {
-                showContentFromUrl(result.appState.targetUrl);
-            }
-
-            console.log("Logged in!");
-        } catch (err) {
-            console.log("Error parsing redirect:", err);
-        }
-
-        window.history.replaceState({}, document.title, "/");
-    }
-    isAuthenticated = await auth0Client.isAuthenticated();
-    document.getElementById("login_label").innerHTML = isAuthenticated ? "LOGOUT" : "LOGIN";
-    document.getElementById("timeline_menus").innerHTML = isAuthenticated ? "-----Timeline Links------------" : "- Timeline Links available after login -";
-    //console.log("refreshLoginStatus isAuthenticated: ", isAuthenticated);
-    return (isAuthenticated);
-}
-
-
 async function log_in_out() {
-    if (auth0State == null) {
-        return;
-    }
+    // Always refresh status first
     await refreshLoginStatus();
-    console.log("log_in_out isAuthenticated: " + isAuthenticated);
+    console.log("log_in_out isAuthenticated:", isAuthenticated);
+
     if (isAuthenticated) {
         try {
             if (confirm("Are you sure you want to logout?")) {
@@ -293,32 +265,30 @@ async function log_in_out() {
                     }
                 });
             }
+            // re-sync authentication state after logout
             await refreshLoginStatus();
         } catch (err) {
-            console.log("Log out failed", err);
+            console.error("Log out failed", err);
         }
-    }
-    else {
+    } else {
         try {
-            let targetUrl = "https://www.trabinextendedfamilyhistory.org/view-histories"; // <--testing for redirect to app
-console.log("Logging in", targetUrl);
+            const targetUrl = "https://www.trabinextendedfamilyhistory.org/view-histories"; // <-- testing redirect
+            console.log("Logging in, redirecting to:", targetUrl);
 
-const options = {
-    authorizationParams: {
-        redirect_uri: "https://www.trabinextendedfamilyhistory.org/view-histories"
-  // This should match what's registered in your Auth0 app settings
-    },
-    appState: { targetUrl }  // Always send targetUrl in appState
-};
+            const options = {
+                authorizationParams: {
+                    redirect_uri: targetUrl
+                },
+                appState: { targetUrl }
+            };
 
-await auth0Client.loginWithRedirect(options);
-
+            await auth0Client.loginWithRedirect(options);
         } catch (err) {
-            console.log("Log in failed", err);
+            console.error("Log in failed", err);
         }
-
     }
 }
+
 
 function print_tl() {
     let timelineId = getChartViewState().timelineId;
