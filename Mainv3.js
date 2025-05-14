@@ -277,6 +277,7 @@ async function refreshLoginStatus() {
     return (isAuthenticated);
 }
 
+
 async function log_in_out() {
     let auth0State = localStorage.getItem('auth0flag');
     if (auth0State == null) {
