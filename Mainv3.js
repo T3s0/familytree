@@ -297,7 +297,7 @@ async function log_in_out() {
     }
     else {
         try {
-            let targetUrl = "";
+            let targetUrl = "https://www.trabinextendedfamilyhistory.org/view-histories";
             console.log("Logging in", targetUrl);
 
             const options = {
