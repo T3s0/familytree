@@ -302,7 +302,7 @@ console.log("Logging in", targetUrl);
 
 const options = {
     authorizationParams: {
-        window.location.origin + "/view-histories"
+        redirect_uri: window.location.origin + "/view-histories"
   // This should match what's registered in your Auth0 app settings
     },
     appState: { targetUrl }  // Always send targetUrl in appState
